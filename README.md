@@ -39,4 +39,4 @@
 
 **2. Clone Repository:**
 ```bash
-git clone [https://github.com/](https://github.com/)[tên-github-của-bạn]/my-blog.git
+git clone [https://github.com/]gthinh29/LAPTRINHWEB.git
