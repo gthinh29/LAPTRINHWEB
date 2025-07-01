@@ -218,7 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
             <div class="button-group">
                 <button type="submit">Đăng ký</button>
-                <a href="dangnhap.php" class="back-to-login">Quay lại Đăng nhập</a>
+                <a href="dangnhap.php" class="back-to-login">Quay lại Đăng nhập</a> 
             </div>
         </form>
     </div>
