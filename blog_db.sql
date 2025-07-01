@@ -15,4 +15,4 @@ CREATE TABLE `posts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `posts` (`username`, `password`) VALUES
-('admin', '$2y$10$Ie.pIzM2CiA3nB/i6go8a.9TjVz.H3b.JkS2.P6p9V6jTq/R.vGg2');
+('admin', '$2y$10$njYEoPIHuRXVqKOKkgPQWebcxTtvQH8yhiuRHbhp3NrK63K1eEoHe');
