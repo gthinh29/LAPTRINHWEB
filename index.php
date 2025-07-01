@@ -1,9 +1,14 @@
 <?php
-include 'db.php';
+session_start();
 
-$sql = "SELECT id, title, author, created_at FROM posts ORDER BY created_at DESC";
-$result = mysqli_query($conn, $sql);
 
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+
+    header('Location: dangnhap.php');
+    exit;
+}
+
+$username = $_SESSION['username'] ?? 'Khách';
 ?>
 
 <!DOCTYPE html>
@@ -11,43 +16,64 @@ $result = mysqli_query($conn, $sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Lập Trình Của Tôi</title>
-    <link rel="stylesheet" href="style.css"> </head>
+    <title>Trang Chính</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #e9f7ef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            text-align: center;
+        }
+        .welcome-container {
+            background-color: #ffffff;
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 90%;
+            box-sizing: border-box;
+        }
+        h1 {
+            color: #28a745;
+            margin-bottom: 25px;
+            font-size: 2.5em;
+            letter-spacing: 1px;
+        }
+        p {
+            color: #333;
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+
+        .logout-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-button:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
 <body>
-
-    <header>
-        <h1>Blog Lập Trình</h1>
-        <p>Nơi chia sẻ kiến thức và kinh nghiệm</p>
-        <a href="admin/add_post.php" style="color: white; background: #007bff; padding: 5px 10px; border-radius: 4px; text-decoration: none;">+ Tạo bài viết mới</a>
-    </header>
-
-    <main class="container">
-        <h2>Các bài viết mới nhất</h2>
-        <div class="post-list">
-            <?php
-            if (mysqli_num_rows($result) > 0) {
-                while($row = mysqli_fetch_assoc($result)) {
-                    echo '<article class="post-item">';
-                    echo '<h3><a href="post.php?id=' . $row["id"] . '">' . htmlspecialchars($row["title"]) . '</a></h3>';
-                    echo '<p class="post-meta">bởi ' . htmlspecialchars($row["author"]) . ' vào ' . date("d/m/Y", strtotime($row["created_at"])) . '</p>';
-                    echo '</article>';
-                }
-            } else {
-                echo "<p>Chưa có bài viết nào.</p>";
-            }
-            ?>
-        </div>
-    </main>
-
-    <footer>
-        <p>&copy; 2025 Blog Lập Trình Của Tôi</p>
-    </footer>
-
-    <button id="scrollTopBtn" title="Lên đầu trang">▲</button>
-
-    <script src="main.js"></script> </body>
+    <div class="welcome-container">
+        <h1>Chào <?php echo htmlspecialchars($username); ?>!</h1>
+        <a href="dangnhap.php" class="logout-button">Thoát</a>
+    </div>
+</body>
 </html>
-
-<?php
-mysqli_close($conn);
-?>

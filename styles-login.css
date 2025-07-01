@@ -1,0 +1,126 @@
+body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Container cho form đăng nhập */
+        .login-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            max-width: 90%; /* Đảm bảo responsive trên các màn hình nhỏ */
+            box-sizing: border-box; /* Bao gồm padding và border vào width */
+        }
+
+        /* Tiêu đề form */
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 1.8em;
+            letter-spacing: 0.5px;
+        }
+
+        /* Nhóm form cho mỗi input */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        /* Nhãn của input */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+            font-size: 1.05em;
+        }
+
+        /* Input text và password */
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
+
+        /* Nhóm checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2); /* Phóng to checkbox một chút */
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0; /* Xóa margin-bottom mặc định */
+            font-weight: normal;
+        }
+
+        /* Nhóm nút */
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px; /* Khoảng cách giữa các nút */
+        }
+
+        /* Nút chung */
+        button {
+            flex: 1; /* Các nút sẽ chiếm không gian bằng nhau */
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        /* Nút Đăng nhập */
+        button[type="submit"] {
+            background-color: #007bff;
+            color: white;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px); /* Hiệu ứng nhấn nút */
+        }
+
+        /* Nút Hủy */
+        button[type="reset"] {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        button[type="reset"]:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px); /* Hiệu ứng nhấn nút */
+        }
+
+        /* Thông báo lỗi */
+        .message {
+            margin-top: 20px;
+            font-size: 1em;
+            font-weight: bold;
+        }
