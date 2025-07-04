@@ -1,126 +1,131 @@
+/* --- Giao diện trang đăng nhập - Đã sửa lỗi hiển thị chữ --- */
+
+/* Thiết lập cơ bản cho toàn trang */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+}
+
 body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f2f5;
+}
 
-        /* Container cho form đăng nhập */
-        .login-container {
-            background-color: #ffffff;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            width: 350px;
-            max-width: 90%; /* Đảm bảo responsive trên các màn hình nhỏ */
-            box-sizing: border-box; /* Bao gồm padding và border vào width */
-        }
+/* Khung chứa form đăng nhập */
+.container {
+    padding: 30px 40px;
+    border: 1px solid #dcdcdc;
+    border-radius: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
 
-        /* Tiêu đề form */
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 1.8em;
-            letter-spacing: 0.5px;
-        }
+/* Tiêu đề "Đăng nhập" */
+h1 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+}
 
-        /* Nhóm form cho mỗi input */
-        .form-group {
-            margin-bottom: 20px;
-        }
+/* Form */
+form {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
 
-        /* Nhãn của input */
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: bold;
-            font-size: 1.05em;
-        }
+/* Nhóm input và label */
+.form-group {
+    position: relative;
+}
 
-        /* Input text và password */
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 1em;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
+/* Ô nhập liệu - SỬA LỖI TẠI ĐÂY */
+.form-group input {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 1rem;
+    color: #333; /* Thêm màu chữ rõ ràng */
+    border-radius: 8px;
+    border: 1px solid #adadad;
+    outline: none;
+    transition: border-color 0.3s ease;
+    
+    /* Các thuộc tính quan trọng đã thêm để sửa lỗi */
+    position: relative; 
+    background-color: transparent; /* Nền trong suốt để thấy label bên dưới */
+    z-index: 2; /* Đảm bảo input và chữ luôn nằm trên label */
+}
 
-        input[type="text"]:focus,
-        input[type="password"]:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-            outline: none;
-        }
+/* Nhãn (Tên đăng nhập, Mật khẩu) */
+.form-group label {
+    position: absolute;
+    left: 15px;
+    top: 12px;
+    color: #8d8d8d;
+    pointer-events: none;
+    background-color: #ffffff; /* Giữ lại nền trắng để tạo hiệu ứng cắt */
+    padding: 0 5px;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    z-index: 1; /* Đảm bảo label nằm dưới input */
+}
 
-        /* Nhóm checkbox */
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            margin-bottom: 25px;
-        }
+/* Hiệu ứng khi focus hoặc có chữ trong input */
+.form-group input:focus + label,
+.form-group input:not(:placeholder-shown) + label {
+    top: -10px;
+    font-size: 0.9rem;
+    color: #006eff;
+    z-index: 3; /* Nâng label lên trên cùng khi nó đã di chuyển lên */
+}
 
-        .checkbox-group input[type="checkbox"] {
-            margin-right: 10px;
-            transform: scale(1.2); /* Phóng to checkbox một chút */
-        }
+.form-group input:focus {
+    border-color: #006eff;
+}
 
-        .checkbox-group label {
-            margin-bottom: 0; /* Xóa margin-bottom mặc định */
-            font-weight: normal;
-        }
+/* Nút Đăng nhập */
+input[type="submit"] {
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #0034de, #006eff);
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
-        /* Nhóm nút */
-        .button-group {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px; /* Khoảng cách giữa các nút */
-        }
+/* Hiệu ứng khi hover và nhấn nút */
+input[type="submit"]:hover {
+    box-shadow: 0px 5px 15px rgba(0, 81, 255, 0.4);
+}
 
-        /* Nút chung */
-        button {
-            flex: 1; /* Các nút sẽ chiếm không gian bằng nhau */
-            padding: 12px 20px;
-            border: none;
-            border-radius: 6px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
+input[type="submit"]:active {
+    transform: scale(0.98);
+    box-shadow: 0px 2px 10px rgba(0, 81, 255, 0.4);
+}
 
-        /* Nút Đăng nhập */
-        button[type="submit"] {
-            background-color: #007bff;
-            color: white;
-        }
+p {
+    text-align: center;
+    margin-top: 10px;
+}
 
-        button[type="submit"]:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px); /* Hiệu ứng nhấn nút */
-        }
-
-        /* Nút Hủy */
-        button[type="reset"] {
-            background-color: #6c757d;
-            color: white;
-        }
-
-        button[type="reset"]:hover {
-            background-color: #5a6268;
-            transform: translateY(-2px); /* Hiệu ứng nhấn nút */
-        }
-
-        /* Thông báo lỗi */
-        .message {
-            margin-top: 20px;
-            font-size: 1em;
-            font-weight: bold;
-        }
+.error {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+}

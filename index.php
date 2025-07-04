@@ -45,7 +45,6 @@ while ($row = mysqli_fetch_assoc($result)) {
                 <a href="logout.php">Đăng xuất</a>
             <?php else: ?>
                 <a href="dangnhap.php">Đăng nhập</a>
-                <a href="dangky.php">Đăng ký</a>
             <?php endif; ?>
         </nav>
     </header>
@@ -68,7 +67,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                             <img src="uploads/<?php echo htmlspecialchars($post['image']); ?>" alt="<?php echo htmlspecialchars($post['title']); ?>" class="post-image">
                         <?php endif; ?>
                         <div class="post-excerpt">
-                            <?php // Hiển thị 300 ký tự đầu tiên của nội dung
+                            <?php
                                 echo nl2br(htmlspecialchars(substr($post['content'], 0, 300))); 
                             ?>...
                         </div>

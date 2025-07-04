@@ -43,28 +43,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <title>Đăng nhập</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles-login.css">
 </head>
 <body>
-    <header><h1>Đăng nhập</h1></header>
+    
     <main class="container">
+        <header><h1>Đăng nhập</h1></header>
         <form action="dangnhap.php" method="post">
             <?php if($error): ?>
                 <p class="error" style="color: red; padding: 10px; border: 1px solid red;"><?php echo $error; ?></p>
             <?php endif; ?>
             <div class="form-group">
+                <input type="text" name="username" required placeholder=" ">
                 <label>Tên đăng nhập</label>
-                <input type="text" name="username" required>
             </div>
             <div class="form-group">
+                <input type="password" name="password" required placeholder=" ">
                 <label>Mật khẩu</label>
-                <input type="password" name="password" required>
+                
             </div>
             <div class="form-group">
                 <input type="submit" value="Đăng nhập">
             </div>
-            <p>Chưa có tài khoản? <a href="dangky.php">Đăng ký ngay</a>.</p>
+            <p>Bạn có phải Admin không? <a href="dangnhap.php">Đăng nhập ngay</a>.</p>
         </form>
     </main>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
