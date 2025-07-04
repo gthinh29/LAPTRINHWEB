@@ -1,5 +1,5 @@
 <?php
-
+date_default_timezone_set('Asia/Ho_Chi_Minh');  
 
 // TIDB CLOUD
 $servername = "gateway01.ap-southeast-1.prod.aws.tidbcloud.com";
@@ -31,3 +31,4 @@ if (!$conn) {
 mysqli_set_charset($conn, "utf8mb4");
 
 ?>
+

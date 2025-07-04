@@ -16,3 +16,7 @@ CREATE TABLE `posts` (
 
 INSERT INTO `posts` (`username`, `password`) VALUES
 ('admin', '$2y$10$njYEoPIHuRXVqKOKkgPQWebcxTtvQH8yhiuRHbhp3NrK63K1eEoHe');
+
+
+
+
