@@ -2,8 +2,8 @@ body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
     margin: 0;
-    background: #1e1e1e;
-    color: #e0e0e0; 
+    background: #1e1e1e; /* Nền tối */
+    color: #e0e0e0;      /* Chữ sáng */
 }
 
 .container {
@@ -14,17 +14,17 @@ body {
 }
 
 header {
-    background: #2a2a2a;
+    background: #2a2a2a; /* Nền header tối hơn */
     color: #ffffff;
     padding: 1rem 0;
-    border-bottom: 1px solid #444;
+    border-bottom: 1px solid #444; /* Viền mờ */
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 header a {
-    color: #58a6ff;
+    color: #58a6ff; /* Link màu xanh sáng */
     text-decoration: none;
 }
 
@@ -58,11 +58,6 @@ form {
     font-weight: bold;
 }
 
-.form-group input[type="text"],
-input{
-    width: 105px 120px;
-    padding: 10px 20px 10px 8px;
-}
 .post-image {
     max-width: 100%;
     height: auto;
@@ -101,17 +96,13 @@ input[type="submit"]:hover,
 button:hover {
     background: #0056b3;
 }
-.search-bar button {
-    padding: 6px 10px;
-    font-size: 13px;
-}
 
 .post-list .post-summary{
-    background-color: #2a2a2a;
-    border: 1px solid #444;
+    background-color: #2a2a2a; 
+    border: 1px solid #444; 
     padding: 20px;  
-    margin-bottom: 20px; 
-    border-radius: 8px;
+    margin-bottom: 20px;
+    border-radius: 8px; 
 }
 
 .post-full,
@@ -130,4 +121,29 @@ button:hover {
 
 .post-summary h2 a:hover {
     color: #58a6ff;
+}
+
+/* --- Search Bar --- */
+.search-bar {
+    margin-bottom: 30px;
+    margin-top: 10px;
+}
+
+.search-bar form {
+    display: flex;
+    gap: 10px;
+}
+
+.search-bar input[type="text"] {
+    flex-grow: 1;
+    border: 1px solid #555;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+}
+
+.search-bar button {
+    padding: 10px 20px;
 }
