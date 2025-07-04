@@ -2,8 +2,8 @@ body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
     margin: 0;
-    background: #1e1e1e; /* Nền tối */
-    color: #e0e0e0;      /* Chữ sáng */
+    background: #1e1e1e;
+    color: #e0e0e0; 
 }
 
 .container {
@@ -14,17 +14,17 @@ body {
 }
 
 header {
-    background: #2a2a2a; /* Nền header tối hơn */
+    background: #2a2a2a;
     color: #ffffff;
     padding: 1rem 0;
-    border-bottom: 1px solid #444; /* Viền mờ */
+    border-bottom: 1px solid #444;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 header a {
-    color: #58a6ff; /* Link màu xanh sáng */
+    color: #58a6ff;
     text-decoration: none;
 }
 
@@ -79,11 +79,11 @@ input{
 .form-group textarea {
     width: 100%;
     padding: 10px;
-    border: 1px solid #555; /* Viền tối hơn */
+    border: 1px solid #555;
     border-radius: 5px;
     box-sizing: border-box;
-    background-color: #2a2a2a; /* Nền input tối */
-    color: #e0e0e0;           /* Chữ trong input sáng */
+    background-color: #2a2a2a;
+    color: #e0e0e0;
 }
 
 input[type="submit"],
@@ -107,27 +107,27 @@ button:hover {
 }
 
 .post-list .post-summary{
-    background-color: #2a2a2a; /* Nền bài viết tối */
-    border: 1px solid #444;    /* Thêm viền để phân tách */
-    padding: 20px;             /* Thêm padding cho đẹp hơn */
-    margin-bottom: 20px;       /* Thêm margin-bottom */
-    border-radius: 8px;        /* Bo góc */
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    padding: 20px;  
+    margin-bottom: 20px; 
+    border-radius: 8px;
 }
 
 .post-full,
 .comments-section {
-    background: #2a2a2a; /* Nền phần nội dung tối */
+    background: #2a2a2a;
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 8px;
-    border: 1px solid #444; /* Viền tối hơn */
+    border: 1px solid #444;
 }
 
 .post-summary h2 a {
     text-decoration: none;
-    color: #ffffff; /* Tiêu đề màu trắng */
+    color: #ffffff;
 }
 
 .post-summary h2 a:hover {
-    color: #58a6ff; /* Màu link khi hover */
+    color: #58a6ff;
 }

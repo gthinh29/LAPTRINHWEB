@@ -1,6 +1,4 @@
-/* --- Giao diện trang đăng nhập - Đã sửa lỗi hiển thị chữ --- */
 
-/* Thiết lập cơ bản cho toàn trang */
 * {
     padding: 0;
     margin: 0;
@@ -16,7 +14,6 @@ body {
     background-color: #f0f2f5;
 }
 
-/* Khung chứa form đăng nhập */
 .container {
     padding: 30px 40px;
     border: 1px solid #dcdcdc;
@@ -25,7 +22,7 @@ body {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
 }
 
-/* Tiêu đề "Đăng nhập" */
+
 h1 {
     font-size: 2rem;
     margin-bottom: 30px;
@@ -34,7 +31,7 @@ h1 {
     text-align: center;
 }
 
-/* Form */
+
 form {
     width: 320px;
     display: flex;
@@ -42,26 +39,22 @@ form {
     gap: 25px;
 }
 
-/* Nhóm input và label */
 .form-group {
     position: relative;
 }
 
-/* Ô nhập liệu - SỬA LỖI TẠI ĐÂY */
 .form-group input {
     width: 100%;
     padding: 12px 15px;
     font-size: 1rem;
-    color: #333; /* Thêm màu chữ rõ ràng */
+    color: #333;
     border-radius: 8px;
     border: 1px solid #adadad;
     outline: none;
     transition: border-color 0.3s ease;
-    
-    /* Các thuộc tính quan trọng đã thêm để sửa lỗi */
     position: relative; 
-    background-color: transparent; /* Nền trong suốt để thấy label bên dưới */
-    z-index: 2; /* Đảm bảo input và chữ luôn nằm trên label */
+    background-color: transparent;
+    z-index: 2;
 }
 
 /* Nhãn (Tên đăng nhập, Mật khẩu) */
@@ -71,27 +64,26 @@ form {
     top: 12px;
     color: #8d8d8d;
     pointer-events: none;
-    background-color: #ffffff; /* Giữ lại nền trắng để tạo hiệu ứng cắt */
+    background-color: #ffffff;
     padding: 0 5px;
     transition: all 0.3s ease;
     font-size: 1rem;
-    z-index: 1; /* Đảm bảo label nằm dưới input */
+    z-index: 1;
 }
 
-/* Hiệu ứng khi focus hoặc có chữ trong input */
 .form-group input:focus + label,
 .form-group input:not(:placeholder-shown) + label {
     top: -10px;
     font-size: 0.9rem;
     color: #006eff;
-    z-index: 3; /* Nâng label lên trên cùng khi nó đã di chuyển lên */
+    z-index: 3;
 }
 
 .form-group input:focus {
     border-color: #006eff;
 }
 
-/* Nút Đăng nhập */
+
 input[type="submit"] {
     padding: 12px 20px;
     font-size: 1.1rem;
@@ -106,7 +98,7 @@ input[type="submit"] {
     transition: all 0.3s ease;
 }
 
-/* Hiệu ứng khi hover và nhấn nút */
+
 input[type="submit"]:hover {
     box-shadow: 0px 5px 15px rgba(0, 81, 255, 0.4);
 }
