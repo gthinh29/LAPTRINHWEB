@@ -17,16 +17,19 @@ while ($row = mysqli_fetch_assoc($result)) {
 ?>
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <title>Quản lý bài viết</title>
     <link rel="stylesheet" href="../style.css">
 </head>
+
 <body>
     <header>
         <h1>Quản lý bài viết</h1>
         <nav>
             <span>Chào, <strong><?php echo htmlspecialchars($_SESSION['username']); ?></strong>!</span>
+            <a href="categories/manage_categories.php">Quản lý Danh mục</a>
             <a href="../index.php">Xem trang chủ</a>
             <a href="../logout.php">Đăng xuất</a>
         </nav>
@@ -46,15 +49,16 @@ while ($row = mysqli_fetch_assoc($result)) {
             <tbody>
                 <?php if (count($posts) > 0): ?>
                     <?php foreach ($posts as $post): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($post['title']); ?></td>
-                        <td><?php echo htmlspecialchars($post['author']); ?></td>
-                        <td><?php echo date('d/m/Y', strtotime($post['created_at'])); ?></td>
-                        <td>
-                            <a href="edit_post.php?id=<?php echo $post['id']; ?>" class="edit-btn">Sửa</a>
-                            <a href="delete_post.php?id=<?php echo $post['id']; ?>" class="delete-btn" onclick="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?');">Xóa</a>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td><?php echo htmlspecialchars($post['title']); ?></td>
+                            <td><?php echo htmlspecialchars($post['author']); ?></td>
+                            <td><?php echo date('d/m/Y', strtotime($post['created_at'])); ?></td>
+                            <td>
+                                <a href="edit_post.php?id=<?php echo $post['id']; ?>" class="edit-btn">Sửa</a>
+                                <a href="delete_post.php?id=<?php echo $post['id']; ?>" class="delete-btn"
+                                    onclick="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?');">Xóa</a>
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
@@ -65,4 +69,5 @@ while ($row = mysqli_fetch_assoc($result)) {
         </table>
     </main>
 </body>
+
 </html>

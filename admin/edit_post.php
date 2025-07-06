@@ -4,18 +4,25 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("location: ../dangnhap.php");
     exit;
 }
-
 require '../includes/database.php';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     header("location: manage_posts.php");
     exit;
 }
-
 $post_id = $_GET['id'];
 $error = '';
 
-$sql_get = "SELECT title, content, author, image FROM posts WHERE id = ?";
+// Lấy danh sách tất cả danh mục
+$sql_categories = "SELECT id, name FROM categories ORDER BY name ASC";
+$result_categories = mysqli_query($conn, $sql_categories);
+$categories = [];
+while ($row = mysqli_fetch_assoc($result_categories)) {
+    $categories[] = $row;
+}
+
+// Lấy thông tin bài viết, bao gồm cả category_id hiện tại
+$sql_get = "SELECT title, content, author, image, category_id FROM posts WHERE id = ?";
 $stmt_get = mysqli_prepare($conn, $sql_get);
 mysqli_stmt_bind_param($stmt_get, "i", $post_id);
 mysqli_stmt_execute($stmt_get);
@@ -31,6 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = trim($_POST['title']);
     $content = trim($_POST['content']);
     $author = trim($_POST['author']);
+    $category_id = !empty($_POST['category_id']) ? (int) $_POST['category_id'] : null;
     $current_image = $post['image'];
 
     if (empty($title) || empty($content) || empty($author)) {
@@ -47,9 +55,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
         }
 
-        $sql_update = "UPDATE posts SET title = ?, content = ?, author = ?, image = ? WHERE id = ?";
+        $sql_update = "UPDATE posts SET title = ?, content = ?, author = ?, image = ?, category_id = ? WHERE id = ?";
         $stmt_update = mysqli_prepare($conn, $sql_update);
-        mysqli_stmt_bind_param($stmt_update, "ssssi", $title, $content, $author, $image_name, $post_id);
+        mysqli_stmt_bind_param($stmt_update, "ssssii", $title, $content, $author, $image_name, $category_id, $post_id);
 
         if (mysqli_stmt_execute($stmt_update)) {
             header("location: manage_posts.php?status=updated");
@@ -89,6 +97,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="text" name="author" id="author" value="<?php echo htmlspecialchars($post['author']); ?>"
                     required>
             </div>
+
+            <div class="form-group">
+                <label for="category_id">Danh mục</label>
+                <select name="category_id" id="category_id">
+                    <option value="">-- Không có danh mục --</option>
+                    <?php foreach ($categories as $category): ?>
+                        <option value="<?php echo $category['id']; ?>" <?php if ($post['category_id'] == $category['id'])
+                               echo 'selected'; ?>>
+                            <?php echo htmlspecialchars($category['name']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
             <div class="form-group">
                 <label for="content-editor">Nội dung</label>
                 <div class="editor-toolbar">
@@ -123,10 +145,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <path d="M3,4H21V6H3V4M9,9H21V11H9V9M3,14H21V16H3V14M9,19H21V21H9V19Z" />
                         </svg></button>
                 </div>
-                <div id="content-editor" contenteditable="true" class="wysiwyg-editor"><?php echo $post['content']; ?>
+                <div id="content-editor" contenteditable="true" class="wysiwyg-editor">
+                    <?php echo htmlspecialchars($post['content']); ?>
                 </div>
-                <textarea name="content" id="content" style="display:none;"></textarea>
+                <textarea name="content" id="content"
+                    style="display:none;"><?php echo htmlspecialchars($post['content']); ?></textarea>
             </div>
+
             <div class="form-group">
                 <label for="image">Thay ảnh đại diện (để trống nếu không muốn thay đổi)</label>
                 <input type="file" name="image" id="image" accept="image/*">

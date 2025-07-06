@@ -7,7 +7,16 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
 require '../includes/database.php';
 
+// Lấy danh sách các danh mục để hiển thị trong dropdown
+$sql_categories = "SELECT id, name FROM categories ORDER BY name ASC";
+$result_categories = mysqli_query($conn, $sql_categories);
+$categories = [];
+while ($row = mysqli_fetch_assoc($result_categories)) {
+    $categories[] = $row;
+}
+
 $title = $content = $author = '';
+$category_id = null;
 $error = '';
 $author = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : '';
 
@@ -15,6 +24,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = trim($_POST['title']);
     $content = trim($_POST['content']);
     $author_post = trim($_POST['author']);
+    // Chuyển đổi category_id thành null nếu người dùng không chọn
+    $category_id = !empty($_POST['category_id']) ? (int) $_POST['category_id'] : null;
     $image_name = '';
 
     if (empty($title) || empty($content) || empty($author_post)) {
@@ -30,9 +41,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
         }
 
-        $sql = "INSERT INTO posts (author, title, content, image) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO posts (author, title, content, image, category_id) VALUES (?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, "ssss", $author_post, $title, $content, $image_name);
+        // "ssssi" - i là viết tắt của integer (số nguyên) cho category_id
+        mysqli_stmt_bind_param($stmt, "ssssi", $author_post, $title, $content, $image_name, $category_id);
 
         if (mysqli_stmt_execute($stmt)) {
             header("location: manage_posts.php?status=added");
@@ -69,6 +81,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label for="author">Tên tác giả</label>
                 <input type="text" name="author" id="author" value="<?php echo $author; ?>" required>
             </div>
+
+            <div class="form-group">
+                <label for="category_id">Danh mục</label>
+                <select name="category_id" id="category_id">
+                    <option value="">-- Không có danh mục --</option>
+                    <?php foreach ($categories as $category): ?>
+                        <option value="<?php echo $category['id']; ?>">
+                            <?php echo htmlspecialchars($category['name']); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
             <div class="form-group">
                 <label for="content-editor">Nội dung</label>
                 <div class="editor-toolbar">

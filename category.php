@@ -1,41 +1,46 @@
 <?php
+require 'includes/database.php';
+
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    header("location: index.php");
+    exit;
+}
+$category_id = $_GET['id'];
+
+$sql_cat_name = "SELECT name FROM categories WHERE id = ?";
+$stmt_cat_name = mysqli_prepare($conn, $sql_cat_name);
+mysqli_stmt_bind_param($stmt_cat_name, "i", $category_id);
+mysqli_stmt_execute($stmt_cat_name);
+$result_cat_name = mysqli_stmt_get_result($stmt_cat_name);
+$category_info = mysqli_fetch_assoc($result_cat_name);
+
+if (!$category_info) {
+    header("location: index.php");
+    exit;
+}
+$page_title = "Các bài viết trong danh mục '" . htmlspecialchars($category_info['name']) . "'";
+
 require 'includes/header.php';
 
-$search_query = '';
+$sql_posts = "SELECT p.id, p.title, p.author, p.content, p.image, p.created_at, c.id as category_id, c.name as category_name 
+              FROM posts p
+              LEFT JOIN categories c ON p.category_id = c.id
+              WHERE p.category_id = ?
+              ORDER BY p.created_at DESC";
+$stmt_posts = mysqli_prepare($conn, $sql_posts);
+mysqli_stmt_bind_param($stmt_posts, "i", $category_id);
+mysqli_stmt_execute($stmt_posts);
+$result_posts = mysqli_stmt_get_result($stmt_posts);
 $posts = [];
-$search_error = '';
-
-if (isset($_GET['query']) && !empty(trim($_GET['query']))) {
-    $search_query = trim($_GET['query']);
-    $search_term = "%" . $search_query . "%";
-
-    $sql = "SELECT p.id, p.title, p.author, p.content, p.image, p.created_at, c.id as category_id, c.name as category_name 
-            FROM posts p
-            LEFT JOIN categories c ON p.category_id = c.id
-            WHERE p.title LIKE ? OR p.content LIKE ? 
-            ORDER BY p.created_at DESC";
-
-    $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "ss", $search_term, $search_term);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-
-    while ($row = mysqli_fetch_assoc($result)) {
-        $posts[] = $row;
-    }
-} else {
-    $search_error = "Vui lòng nhập từ khóa để tìm kiếm.";
+while ($row = mysqli_fetch_assoc($result_posts)) {
+    $posts[] = $row;
 }
-
-$page_title = "Kết quả tìm kiếm cho '" . htmlspecialchars($search_query) . "'";
 ?>
 
-<section class="search-results">
+<section class="post-list">
     <h2><?php echo $page_title; ?></h2>
 
-    <?php if (!empty($search_error)): ?>
-        <p><?php echo $search_error; ?></p>
-    <?php elseif (count($posts) > 0): ?>
+    <?php if (count($posts) > 0): ?>
         <?php foreach ($posts as $post): ?>
             <article class="post-summary">
                 <div class="summary-grid">
@@ -50,23 +55,27 @@ $page_title = "Kết quả tìm kiếm cho '" . htmlspecialchars($search_query) 
                     <div class="summary-content">
                         <h2><a href="post.php?id=<?php echo $post['id']; ?>"><?php echo htmlspecialchars($post['title']); ?></a>
                         </h2>
-                        <p class="post-meta">
-                            Đăng bởi <strong><?php echo htmlspecialchars($post['author']); ?></strong> vào lúc
+                        <p class="post-meta">Đăng bởi <strong><?php echo htmlspecialchars($post['author']); ?></strong> vào lúc
                             <?php echo date('d/m/Y', strtotime($post['created_at'])); ?>
-                            <?php if (!empty($post['category_name'])): ?>
-                                trong <a href="category.php?id=<?php echo $post['category_id']; ?>"
-                                    class="post-category"><?php echo htmlspecialchars($post['category_name']); ?></a>
-                            <?php endif; ?>
                         </p>
                         <div class="post-excerpt">
                             <?php
                             // === SAO CHÉP TỪ INDEX.PHP - ĐẢM BẢO NHẤT QUÁN ===
+                            // 1. Thay thế &nbsp; và giải mã các thực thể HTML khác
                             $content_for_excerpt = html_entity_decode(str_replace('&nbsp;', ' ', $post['content']));
+
+                            // 2. Xử lý xuống dòng từ các thẻ <br>, <p>, <div>
                             $content_with_newlines = preg_replace('/<br\s?\/?>/i', "\n", $content_for_excerpt);
                             $content_with_newlines = preg_replace('/(<\/p>|<\/div>)/i', "\n", $content_with_newlines);
+
+                            // 3. Loại bỏ tất cả các thẻ HTML còn lại
                             $plain_text = strip_tags($content_with_newlines);
+
+                            // 4. (Tùy chọn) Loại bỏ các URL để đoạn trích gọn gàng hơn
                             $url_pattern = '/https?:\/\/[^\s<]+/';
                             $text_without_links = preg_replace($url_pattern, '', $plain_text);
+
+                            // 5. Rút gọn văn bản và hiển thị
                             $excerpt = mb_substr($text_without_links, 0, 150, 'UTF-8');
                             echo htmlspecialchars($excerpt);
                             ?>...
@@ -77,8 +86,7 @@ $page_title = "Kết quả tìm kiếm cho '" . htmlspecialchars($search_query) 
             </article>
         <?php endforeach; ?>
     <?php else: ?>
-        <p>Không tìm thấy bài viết nào phù hợp với từ khóa
-            "<strong><?php echo htmlspecialchars($search_query); ?></strong>".</p>
+        <p>Không có bài viết nào trong danh mục này.</p>
     <?php endif; ?>
 </section>
 

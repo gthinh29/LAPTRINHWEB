@@ -1,5 +1,5 @@
 <?php
-// file: post.php (Phiên bản cuối cùng - Sử dụng link embed chuẩn của YouTube)
+// file: post.php (Đã cập nhật để hiển thị danh mục)
 require 'includes/database.php';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
@@ -8,7 +8,11 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 }
 $post_id = $_GET['id'];
 
-$sql_post = "SELECT title, content, author, image, created_at FROM posts WHERE id = ?";
+// === NÂNG CẤP SQL: Dùng LEFT JOIN để lấy cả tên danh mục ===
+$sql_post = "SELECT p.title, p.content, p.author, p.image, p.created_at, c.id as category_id, c.name as category_name 
+             FROM posts p
+             LEFT JOIN categories c ON p.category_id = c.id
+             WHERE p.id = ?";
 $stmt_post = mysqli_prepare($conn, $sql_post);
 mysqli_stmt_bind_param($stmt_post, "i", $post_id);
 mysqli_stmt_execute($stmt_post);
@@ -96,8 +100,15 @@ require 'includes/header.php';
 
 <article class="post-full">
     <h1><?php echo htmlspecialchars($post['title']); ?></h1>
-    <p class="post-meta">Đăng bởi <strong><?php echo htmlspecialchars($post['author']); ?></strong> vào lúc
-        <?php echo date('d/m/Y H:i', strtotime($post['created_at'])); ?></p>
+    <p class="post-meta">
+        Đăng bởi <strong><?php echo htmlspecialchars($post['author']); ?></strong> vào lúc
+        <?php echo date('d/m/Y H:i', strtotime($post['created_at'])); ?>
+
+        <?php if (!empty($post['category_name'])): ?>
+            trong <a href="category.php?id=<?php echo $post['category_id']; ?>"
+                class="post-category"><?php echo htmlspecialchars($post['category_name']); ?></a>
+        <?php endif; ?>
+    </p>
     <?php if ($post['image']): ?>
         <img src="uploads/<?php echo htmlspecialchars($post['image']); ?>"
             alt="<?php echo htmlspecialchars($post['title']); ?>" class="post-image-full">
@@ -113,8 +124,6 @@ require 'includes/header.php';
             $youtube_pattern,
             function ($matches) {
                 $video_id = htmlspecialchars($matches[1], ENT_QUOTES, 'UTF-8');
-
-                // === SỬA LỖI CÚ PHÁP Ở ĐÂY: Dùng link /embed/ tiêu chuẩn của YouTube ===
                 $iframe_src = "https://www.youtube.com/embed/" . $video_id;
 
                 return '<div class="video-container">' .
