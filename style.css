@@ -394,3 +394,82 @@ footer {
     counter-increment: list-counter;
     content: counter(list-counter) ".";
 }
+
+/* =================================
+   SEARCH FORM
+   ================================= */
+.search-form {
+    display: inline-flex; /* Sử dụng flex để các item nằm trên một hàng */
+    vertical-align: middle; /* Căn giữa theo chiều dọc với các link khác */
+    margin-right: 20px;
+}
+
+.search-form input[type="search"] {
+    padding: 8px 12px;
+    border: 1px solid #555;
+    border-radius: 5px 0 0 5px; /* Bo góc trái */
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    font-size: 0.9rem;
+    min-width: 200px;
+    border-right: none; /* Bỏ border phải để nút bấm liền vào */
+}
+
+.search-form input[type="search"]:focus {
+    border-color: #58a6ff;
+    box-shadow: 0 0 0 0.2rem rgba(88, 166, 255, 0.25);
+    outline: none;
+}
+
+.search-form button {
+    padding: 8px 15px;
+    border: 1px solid #007bff;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 0 5px 5px 0; /* Bo góc phải */
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.search-form button:hover {
+    background: #0056b3;
+}
+
+/* Kiểu chữ cho lời chào admin */
+.welcome-message {
+    padding: 0 15px;
+    font-weight: 500;
+}
+
+/* =================================
+   SEARCH RESULTS PAGE
+   ================================= */
+
+/* Áp dụng lại style của post-summary cho các bài viết trên trang tìm kiếm */
+.search-results .post-summary {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    padding: 25px;
+    margin-top: 25px; /* Thêm khoảng cách trên để tách biệt với tiêu đề */
+    margin-bottom: 25px;
+    border-radius: 8px;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.search-results .post-summary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Đổi thẻ <h3> thành <h2> để đồng bộ với trang chủ */
+.search-results .post-summary h3 {
+    font-size: 1.75rem; /* Tương đương h2 */
+    margin-top: 0;
+}
+.search-results .post-summary h3 a {
+    color: #ffffff;
+}
+.search-results .post-summary h3 a:hover {
+    color: #58a6ff;
+}
