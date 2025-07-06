@@ -13,7 +13,6 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 $id = $_GET['id'];
 $error = '';
 
-// Lấy thông tin danh mục hiện tại
 $sql_get = "SELECT name FROM categories WHERE id = ?";
 $stmt_get = mysqli_prepare($conn, $sql_get);
 mysqli_stmt_bind_param($stmt_get, "i", $id);
@@ -54,22 +53,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
-    <header>
-        <h1>Sửa Danh mục</h1>
-    </header>
+    <?php require_once '../../includes/header.php'; ?>
     <main class="container">
-        <a href="manage_categories.php">← Quay lại</a>
-        <form class="admin-form" action="edit_category.php?id=<?php echo $id; ?>" method="post">
+        <div class="form-container" style="max-width: 700px; margin: 3rem auto;">
+            <div class="form-header">
+                <h1>Sửa Danh mục</h1>
+                <a href="manage_categories.php" class="back-link">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"></path>
+                    </svg>
+                    <span>Quay lại</span>
+                </a>
+            </div>
+
             <?php if ($error): ?>
-                <p class="error"><?php echo $error; ?></p><?php endif; ?>
-            <div class="form-group">
-                <label for="name">Tên Danh mục</label>
-                <input type="text" name="name" id="name" value="<?php echo htmlspecialchars($name); ?>" required>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Cập nhật">
-            </div>
-        </form>
+                <p class="error"><?php echo $error; ?></p>
+            <?php endif; ?>
+
+            <form class="admin-form" action="edit_category.php?id=<?php echo $id; ?>" method="post">
+                <div class="form-group">
+                    <label for="name">Tên Danh mục</label>
+                    <input type="text" name="name" id="name" value="<?php echo htmlspecialchars($name); ?>" required>
+                </div>
+                <div class="form-actions">
+                    <input type="submit" value="Cập nhật">
+                </div>
+            </form>
+        </div>
     </main>
 </body>
 

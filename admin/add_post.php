@@ -7,7 +7,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
 require '../includes/database.php';
 
-// Lấy danh sách các danh mục để hiển thị trong dropdown
 $sql_categories = "SELECT id, name FROM categories ORDER BY name ASC";
 $result_categories = mysqli_query($conn, $sql_categories);
 $categories = [];
@@ -15,7 +14,7 @@ while ($row = mysqli_fetch_assoc($result_categories)) {
     $categories[] = $row;
 }
 
-$title = $content = $author = '';
+$title = $content = '';
 $category_id = null;
 $error = '';
 $author = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : '';
@@ -24,7 +23,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = trim($_POST['title']);
     $content = trim($_POST['content']);
     $author_post = trim($_POST['author']);
-    // Chuyển đổi category_id thành null nếu người dùng không chọn
     $category_id = !empty($_POST['category_id']) ? (int) $_POST['category_id'] : null;
     $image_name = '';
 
@@ -43,7 +41,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $sql = "INSERT INTO posts (author, title, content, image, category_id) VALUES (?, ?, ?, ?, ?)";
         $stmt = mysqli_prepare($conn, $sql);
-        // "ssssi" - i là viết tắt của integer (số nguyên) cho category_id
         mysqli_stmt_bind_param($stmt, "ssssi", $author_post, $title, $content, $image_name, $category_id);
 
         if (mysqli_stmt_execute($stmt)) {
@@ -66,79 +63,101 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <header>
-        <h1>Thêm bài viết mới</h1>
+        <h1><a href="../index.php">Blog Công Nghệ</a></h1>
+        <nav>
+            <span class="welcome-message">Chào,
+                <strong><?php echo htmlspecialchars($_SESSION['username']); ?></strong>!</span>
+            <a href="manage_posts.php">Quản lý Bài viết</a>
+            <a href="categories/manage_categories.php">Quản lý Danh mục</a>
+            <a href="../logout.php">Đăng xuất</a>
+        </nav>
     </header>
     <main class="container">
-        <a href="manage_posts.php">← Quay lại danh sách</a>
-        <form class="admin-form" action="add_post.php" method="post" enctype="multipart/form-data">
+        <div class="form-container">
+            <div class="form-header">
+                <h1>Thêm bài viết mới</h1>
+                <a href="manage_posts.php" class="back-link">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                        <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"></path>
+                    </svg>
+                    <span>Quay lại danh sách</span>
+                </a>
+            </div>
+
             <?php if ($error): ?>
-                <p class="error"><?php echo $error; ?></p><?php endif; ?>
-            <div class="form-group">
-                <label for="title">Tiêu đề</label>
-                <input type="text" name="title" id="title" value="<?php echo htmlspecialchars($title); ?>" required>
-            </div>
-            <div class="form-group">
-                <label for="author">Tên tác giả</label>
-                <input type="text" name="author" id="author" value="<?php echo $author; ?>" required>
-            </div>
+                <p class="error"><?php echo $error; ?></p>
+            <?php endif; ?>
 
-            <div class="form-group">
-                <label for="category_id">Danh mục</label>
-                <select name="category_id" id="category_id">
-                    <option value="">-- Không có danh mục --</option>
-                    <?php foreach ($categories as $category): ?>
-                        <option value="<?php echo $category['id']; ?>">
-                            <?php echo htmlspecialchars($category['name']); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="content-editor">Nội dung</label>
-                <div class="editor-toolbar">
-                    <button type="button" title="Hoàn tác" onclick="formatDoc('undo');">↩</button>
-                    <button type="button" title="Làm lại" onclick="formatDoc('redo');">↪</button>
-                    <button type="button" onclick="formatDoc('bold');"><b>B</b></button>
-                    <button type="button" onclick="formatDoc('italic');"><i>I</i></button>
-                    <button type="button" onclick="formatDoc('underline');"><u>U</u></button>
-                    <button type="button" title="Chèn liên kết" onclick="insertLink();">🔗</button>
-                    <button type="button" title="Danh sách gạch đầu dòng"
-                        onclick="formatDoc('insertUnorderedList');">●</button>
-                    <button type="button" title="Danh sách có thứ tự"
-                        onclick="formatDoc('insertOrderedList');">1.</button>
-                    <input type="color" id="fontColorPicker" title="Màu chữ">
-                    <select id="fontSizeSelector" title="Cỡ chữ">
-                        <option value="14">Nhỏ</option>
-                        <option value="16" selected>Bình thường</option>
-                        <option value="20">Hơi lớn</option>
-                        <option value="30">Lớn</option>
-                        <option value="44">Rất lớn</option>
-                    </select>
-                    <button type="button" title="Căn trái" onclick="formatDoc('justifyLeft');"><svg width="20"
-                            height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M3,4H21V6H3V4M3,9H15V11H3V9M3,14H21V16H3V14M3,19H15V21H3V19Z" />
-                        </svg></button>
-                    <button type="button" title="Căn giữa" onclick="formatDoc('justifyCenter');"><svg width="20"
-                            height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M3,4H21V6H3V4M7,9H17V11H7V9M3,14H21V16H3V14M7,19H17V21H7V19Z" />
-                        </svg></button>
-                    <button type="button" title="Căn phải" onclick="formatDoc('justifyRight');"><svg width="20"
-                            height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M3,4H21V6H3V4M9,9H21V11H9V9M3,14H21V16H3V14M9,19H21V21H9V19Z" />
-                        </svg></button>
+            <form class="admin-form" action="add_post.php" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="title">Tiêu đề</label>
+                    <input type="text" name="title" id="title" value="<?php echo htmlspecialchars($title); ?>" required>
                 </div>
-                <div id="content-editor" contenteditable="true" class="wysiwyg-editor"></div>
-                <textarea name="content" id="content" style="display:none;"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="image">Ảnh đại diện (tùy chọn)</label>
-                <input type="file" name="image" id="image" accept="image/*">
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Đăng bài">
-            </div>
-        </form>
+                <div class="form-group">
+                    <label for="author">Tên tác giả</label>
+                    <input type="text" name="author" id="author" value="<?php echo $author; ?>" required>
+                </div>
+                <div class="form-group">
+                    <label for="category_id">Danh mục</label>
+                    <select name="category_id" id="category_id">
+                        <option value="">-- Chọn danh mục --</option>
+                        <?php foreach ($categories as $category): ?>
+                            <option value="<?php echo $category['id']; ?>">
+                                <?php echo htmlspecialchars($category['name']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="content-editor">Nội dung</label>
+                    <div class="editor-toolbar">
+                        <button type="button" title="Hoàn tác" onclick="formatDoc('undo');">↩</button>
+                        <button type="button" title="Làm lại" onclick="formatDoc('redo');">↪</button>
+                        <button type="button" onclick="formatDoc('bold');"><b>B</b></button>
+                        <button type="button" onclick="formatDoc('italic');"><i>I</i></button>
+                        <button type="button" onclick="formatDoc('underline');"><u>U</u></button>
+                        <button type="button" title="Chèn liên kết" onclick="insertLink();">🔗</button>
+                        <button type="button" title="Danh sách gạch đầu dòng"
+                            onclick="formatDoc('insertUnorderedList');">●</button>
+                        <button type="button" title="Danh sách có thứ tự"
+                            onclick="formatDoc('insertOrderedList');">1.</button>
+                        <input type="color" id="fontColorPicker" title="Màu chữ">
+                        <select id="fontSizeSelector" title="Cỡ chữ">
+                            <option value="14">Nhỏ</option>
+                            <option value="16" selected>Bình thường</option>
+                            <option value="20">Hơi lớn</option>
+                            <option value="30">Lớn</option>
+                            <option value="44">Rất lớn</option>
+                        </select>
+                        <button type="button" title="Căn trái" onclick="formatDoc('justifyLeft');"><svg width="20"
+                                height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M3,4H21V6H3V4M3,9H15V11H3V9M3,14H21V16H3V14M3,19H15V21H3V19Z" />
+                            </svg></button>
+                        <button type="button" title="Căn giữa" onclick="formatDoc('justifyCenter');"><svg width="20"
+                                height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M3,4H21V6H3V4M7,9H17V11H7V9M3,14H21V16H3V14M7,19H17V21H7V19Z" />
+                            </svg></button>
+                        <button type="button" title="Căn phải" onclick="formatDoc('justifyRight');"><svg width="20"
+                                height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M3,4H21V6H3V4M9,9H21V11H9V9M3,14H21V16H3V14M9,19H21V21H9V19Z" />
+                            </svg></button>
+                    </div>
+                    <div id="content-editor" contenteditable="true" class="wysiwyg-editor"></div>
+                    <textarea name="content" id="content" style="display:none;"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="image">Ảnh đại diện (tùy chọn)</label>
+                    <div class="file-input-wrapper">
+                        <span class="file-input-button">Chọn file...</span>
+                        <input type="file" name="image" id="image" accept="image/*"
+                            onchange="document.getElementById('file-name').textContent = this.files[0] ? this.files[0].name : 'Chưa có file nào được chọn.';">
+                    </div>
+                    <p id="file-name" class="file-name-display">Chưa có file nào được chọn.</p>
+                </div>
+                <div class="form-actions">
+                    <input type="submit" value="Đăng bài">
+                </div>
+            </form>
+        </div>
     </main>
     <script src="../admin_editor.js"></script>
 </body>

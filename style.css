@@ -7,19 +7,20 @@ body {
     margin: 0;
     background: #1e1e1e;
     color: #e0e0e0;
+    font-size: 14px;
 }
 
 .container {
-    width: 80%;
-    margin: auto;
-    overflow: hidden;
-    padding: 20px;
+    width: 90%;
+    max-width: 1400px;
+    margin: 2% auto;
+    padding: 0;
 }
 
 a {
     color: #58a6ff;
     text-decoration: none;
-    transition: color 0.2s ease-in-out;
+    transition: all 0.2s ease-in-out;
 }
 a:hover {
     color: #8abfff;
@@ -31,202 +32,281 @@ a:hover {
 header {
     background: #2a2a2a;
     color: #ffffff;
-    padding: 1rem 0;
+    padding: 0.8rem 5%;
     border-bottom: 1px solid #444;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 2rem;
 }
 
 header h1 {
     margin: 0;
-    padding-left: 20px;
-    font-size: 24px;
+    font-size: 1.4rem;
 }
 header h1 a { color: #fff; }
 
 header nav {
-    padding-right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 header nav a {
-    padding: 0 15px;
+    padding: 0.5rem 1rem;
     font-weight: 500;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    color: #c0c0c0;
 }
-
-/* =================================
-   DANH SÁCH BÀI VIẾT (POST LIST)
-   ================================= */
-.post-list .post-summary {
-    background-color: #2a2a2a;
-    border: 1px solid #444;
-    padding: 25px;
-    margin-bottom: 25px;
-    border-radius: 8px;
-    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-}
-.post-list .post-summary:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-}
-.post-summary h2 a { color: #ffffff; }
-.post-summary h2 a:hover { color: #58a6ff; }
-.read-more { display: inline-block; margin-top: 15px; font-weight: bold; }
-
-/* =================================
-   CHI TIẾT BÀI VIẾT & HÌNH ẢNH
-   ================================= */
-.post-full {
-    background: #2a2a2a;
-    padding: 30px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    border: 1px solid #444;
-}
-.post-meta { font-size: 0.9em; color: #a0a0a0; margin-bottom: 15px; }
-.post-image, .post-image-full { 
-    width: 90%;
-    max-width: 750px;
-    height: auto;
-    display: block;
-    margin: 25px auto;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-.post-content { font-size: 1.1em; line-height: 1.7; }
-.back-link { font-weight: bold; font-size: 1.1em; }
-
-/* =================================
-   FORM CHUNG & TRANG ADMIN (GIAO DIỆN TỐI)
-   ================================= */
-.admin-form { margin-bottom: 20px; }
-.admin-form .form-group { margin-bottom: 20px; }
-.admin-form .form-group label { display: block; margin-bottom: 8px; font-weight: bold; }
-.admin-form .form-group input[type="text"],
-.admin-form .form-group input[type="file"],
-.admin-form .form-group textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #555;
-    border-radius: 5px;
-    box-sizing: border-box;
-    background-color: #2a2a2a;
-    color: #e0e0e0;
-    font-size: 1rem;
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-.admin-form .form-group input:focus, .admin-form .form-group textarea:focus {
-    border-color: #58a6ff;
-    box-shadow: 0 0 0 0.2rem rgba(88, 166, 255, 0.25);
-    outline: none;
-}
-input[type="submit"], button, .button-add-new {
-    background: #007bff;
+header nav a:hover {
+    background-color: #3a3a3a;
     color: #fff;
-    border: 0;
-    padding: 12px 20px;
+}
+.welcome-message {
+    color: #a0a0a0;
+}
+.welcome-message strong {
+    color: #ffffff;
+}
+
+/* =================================
+   TRANG QUẢN LÝ (LIST VIEW)
+   ================================= */
+
+/* --- Thanh công cụ Admin --- */
+.admin-toolbar {
+    display: flex;
+    gap: 1%;
+    margin-bottom: 1.5rem;
+}
+.admin-toolbar .btn-icon {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0.5rem 0 !important;
+    font-size: 0.9rem !important;
+    font-weight: 600 !important;
+    border-radius: 6px;
+    border: none;
     cursor: pointer;
-    border-radius: 5px;
-    font-size: 1.1rem;
-    font-weight: bold;
     text-decoration: none;
-    display: inline-block;
-    transition: background-color 0.3s;
-}
-input[type="submit"]:hover, button:hover, .button-add-new:hover {
-    background: #0056b3;
     color: #fff;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
-.admin-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-.admin-table th, .admin-table td { border: 1px solid #444; padding: 12px; text-align: left; }
-.admin-table th { background-color: #333; }
-.admin-table a { color: white; text-decoration: none; padding: 6px 12px; border-radius: 4px; margin-right: 5px; }
-.admin-table .edit-btn { background-color: #ffc107; color: black; }
-.admin-table .delete-btn { background-color: #dc3545; color: white; }
+.admin-toolbar .btn-icon:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+.admin-toolbar .btn-icon svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+.admin-toolbar .button-add-new { background-color: #007bff; }
+.admin-toolbar .edit-btn { background-color: #ffc107; color: #1e1e1e; }
+.admin-toolbar .delete-btn { background-color: #dc3545; }
 
-/* =================================
-   TRANG ĐĂNG NHẬP (GIAO DIỆN SÁNG)
-   ================================= */
-.login-page-body {
+/* --- Bảng Admin --- */
+.admin-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #444;
+    background-color: #2a2a2a;
+}
+.admin-table th, .admin-table td {
+    padding: 0.58rem 1.2rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #3a3a3a;
+    text-align: left;
+}
+.admin-table tbody tr:last-child td { border-bottom: none; }
+.admin-table th {
+    background-color: #333;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #a0a0a0;
+}
+.admin-table tbody tr:hover { background-color: #333; }
+.admin-table .post-title { font-weight: 600; color: #ffffff; }
+.admin-table .post-author { color: #a0a0a0; }
+.admin-table .no-posts-message { text-align: center !important; padding: 3rem !important; color: #888; }
+.admin-table input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #3e3e3e;
+    border: 1px solid #666;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    position: relative;
+    vertical-align: middle;
+}
+.admin-table input[type="checkbox"]:checked {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+.admin-table input[type="checkbox"]:checked::after {
+    content: '✔';
+    font-size: 14px;
+    color: #fff;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* --- Phân trang --- */
+.pagination {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    background-color: #f0f2f5;
+    gap: 8px;
+    margin-top: 1.5rem;
 }
-.login-container {
-    padding: 30px 40px;
-    border-radius: 20px;
-    background-color: #ffffff;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-    width: 340px;
-    color: #333;
+.pagination a {
+    color: #c0c0c0;
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 0.2rem 0.7rem;
+    font-weight: 600;
+    text-decoration: none;
 }
-.login-container h1 { text-align: center; margin-bottom: 30px; }
-.login-container form { display: flex; flex-direction: column; }
-.login-container .form-group { position: relative; margin-bottom: 25px; }
-.login-container input[type="text"],
-.login-container input[type="password"] {
-    width: 100%;
-    padding: 15px;
+.pagination a.active, .pagination a:hover {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* =================================
+   TRANG THÊM/SỬA (FORM VIEW)
+   ================================= */
+.form-container {
+    background-color: #2a2a2a;
+    padding: 2rem 2.5rem 2.5rem;
     border-radius: 8px;
-    border: 1px solid #adadad;
-    background-color: transparent;
-    color: #333;
+    border: 1px solid #444;
+}
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #444;
+    padding-bottom: 1.2rem;
+    margin-bottom: 2rem;
+}
+.form-header h1 {
+    margin: 0;
+    font-size: 1.6rem;
+}
+.back-link {
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #3a3a3a;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    color: #e0e0e0;
+}
+.back-link:hover {
+    background-color: #4a4a4a;
+    color: #fff;
+}
+
+.admin-form .form-group { margin-bottom: 1.5rem; }
+.admin-form .form-group label {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+    color: #c0c0c0;
+}
+.admin-form .form-group input[type="text"],
+.admin-form .form-group select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #555;
+    border-radius: 6px;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
     font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
     box-sizing: border-box;
-    position: relative;
-    z-index: 2;
 }
-.login-container .form-group label {
-    position: absolute;
-    left: 15px;
-    top: 15px;
-    color: #8d8d8d;
-    pointer-events: none;
-    background-color: transparent;
-    padding: 0 5px;
-    transition: all 0.2s ease;
-    z-index: 1;
-}
-.login-container .form-group input:focus + label,
-.login-container .form-group input:not(:placeholder-shown) + label {
-    top: -10px;
-    font-size: 0.9rem;
-    color: #006eff;
-    background-color: #ffffff;
-    z-index: 3;
-}
-.login-container .form-group input:focus {
-    border-color: #006eff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+.admin-form .form-group input:focus,
+.admin-form .form-group select:focus,
+.wysiwyg-editor:focus {
+    border-color: #58a6ff;
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
     outline: none;
 }
-.login-container input[type="submit"] {
-    background: linear-gradient(135deg, #0034de, #006eff);
-    border: none;
-    font-weight: bold;
-    margin-top: 10px;
+
+/* --- File Input --- */
+.file-input-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    width: 100%;
 }
-.error {
-    color: #dc3545;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    padding: 1rem;
-    border-radius: 8px;
+.file-input-button {
+    background-color: #3a3a3a;
+    border: 1px solid #555;
+    color: #e0e0e0;
+    padding: 0.8rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    display: block;
     text-align: center;
-    margin-bottom: 20px;
+}
+.file-input-wrapper input[type="file"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+.file-name-display {
+    margin-top: 0.8rem;
+    color: #a0a0a0;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+/* --- Form Actions (Submit button) --- */
+.form-actions {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #444;
+    text-align: right;
+}
+.form-actions input[type="submit"] {
+    background: #007bff;
+    color: #fff;
+    border: 0;
+    padding: 0.8rem 2.5rem;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+.form-actions input[type="submit"]:hover {
+    background: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
 }
 
 /* =================================
-   PHÂN TRANG
-   ================================= */
-.pagination { margin-top: 2rem; text-align: center; }
-.pagination a { padding: 8px 16px; border: 1px solid #444; margin: 0 4px; border-radius: 4px; }
-.pagination a:hover { background-color: #333; }
-.pagination a.active { background-color: #007bff; color: white; border-color: #007bff; cursor: default; }
-
-/* =================================
-   TRÌNH SOẠN THẢO WYSIWYG
+   TRÌNH SOẠN THẢO WYSIWYG (ĐÃ KHÔI PHỤC BẢN GỐC)
    ================================= */
 .editor-toolbar {
     background-color: #333;
@@ -304,11 +384,16 @@ input[type="submit"]:hover, button:hover, .button-add-new:hover {
     font-weight: bold;
 }
 .editor-toolbar select {
+
+    width: auto !important; /* Ghi đè width: 100% từ form chung */
+    min-width: 120px;
+    height: 40px;
+    margin: 2px;
+    padding: 0 32px 0 10px !important;
     background-color: #444;
     color: #fff;
     border: 1px solid #666;
     border-radius: 4px;
-    padding: 10px; 
     font-size: 0.9rem;
     font-weight: bold;
     cursor: pointer;
@@ -319,7 +404,7 @@ input[type="submit"]:hover, button:hover, .button-add-new:hover {
     background-image: url("data:image/svg+xml;charset=UTF8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 8px center;
-    padding-right: 32px;
+    box-sizing: border-box;
 }
 .editor-toolbar select:hover {
     background-color: #555;
@@ -329,8 +414,65 @@ input[type="submit"]:hover, button:hover, .button-add-new:hover {
 }
 
 /* =================================
-   VIDEO NHÚNG
+   CÁC STYLE KHÁC (TỪ FILE GỐC)
    ================================= */
+.post-list .post-summary {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+.post-list .post-summary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+.summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 3fr; 
+    gap: 25px;
+    align-items: center;
+}
+.summary-thumbnail .post-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 0;
+}
+.summary-content { grid-column: span 2; }
+.summary-thumbnail + .summary-content { grid-column: auto; }
+.post-summary h2 a { color: #ffffff; }
+.post-summary h2 a:hover { color: #58a6ff; }
+.read-more { display: inline-block; margin-top: 15px; font-weight: bold; }
+.post-full {
+    background: #2a2a2a;
+    padding: 30px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #444;
+}
+.post-meta { font-size: 0.9em; color: #a0a0a0; margin-bottom: 15px; }
+.post-image, .post-image-full { 
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 25px auto;
+    border-radius: 8px;
+}
+.post-content { font-size: 1.1em; line-height: 1.7; }
+.post-category {
+    display: inline-block;
+    background-color: #3a3a3a;
+    color: #b0b0b0;
+    font-size: 0.8em;
+    font-weight: bold;
+    padding: 3px 10px;
+    border-radius: 15px;
+    margin-left: 5px;
+}
+.post-category:hover { background-color: #58a6ff; color: #ffffff; }
 .video-container {
     position: relative;
     padding-bottom: 56.25%;
@@ -348,10 +490,108 @@ input[type="submit"]:hover, button:hover, .button-add-new:hover {
     width: 100%;
     height: 100%;
 }
-
-/* =================================
-   FOOTER
-   ================================= */
+.search-form {
+    display: inline-flex;
+    vertical-align: middle;
+}
+.search-form input[type="search"] {
+    padding: 8px 12px;
+    border: 1px solid #555;
+    border-radius: 5px 0 0 5px;
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    font-size: 0.9rem;
+    min-width: 200px;
+    border-right: none;
+}
+.search-form input[type="search"]:focus {
+    border-color: #58a6ff;
+    outline: none;
+}
+.search-form button {
+    padding: 8px 15px;
+    border: 1px solid #007bff;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 0 5px 5px 0;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+.search-form button:hover { background: #0056b3; }
+.login-page-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f2f5;
+}
+.login-container {
+    padding: 30px 40px;
+    border-radius: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    width: 340px;
+    color: #333;
+}
+.login-container h1 { text-align: center; margin-bottom: 30px; }
+.login-container form { display: flex; flex-direction: column; }
+.login-container .form-group { position: relative; margin-bottom: 25px; }
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: 100%;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #adadad;
+    background-color: transparent;
+    color: #333;
+    font-size: 1rem;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 2;
+}
+.login-container .form-group label {
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    color: #8d8d8d;
+    pointer-events: none;
+    background-color: transparent;
+    padding: 0 5px;
+    transition: all 0.2s ease;
+    z-index: 1;
+}
+.login-container .form-group input:focus + label,
+.login-container .form-group input:not(:placeholder-shown) + label {
+    top: -10px;
+    font-size: 0.9rem;
+    color: #006eff;
+    background-color: #ffffff;
+    z-index: 3;
+}
+.login-container .form-group input:focus {
+    border-color: #006eff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+.login-container input[type="submit"] {
+    background: linear-gradient(135deg, #0034de, #006eff);
+    border: none;
+    font-weight: bold;
+    margin-top: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+.error {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 20px;
+}
 footer {
     text-align: center;
     padding: 20px;
@@ -359,164 +599,4 @@ footer {
     background: #2a2a2a;
     color: #a0a0a0;
     border-top: 1px solid #444;
-}
-
-/* =================================
-   NÂNG CẤP TOÀN DIỆN CHO DANH SÁCH (LIST)
-   ================================= */
-.wysiwyg-editor ul, .post-content ul,
-.wysiwyg-editor ol, .post-content ol {
-    list-style: none;
-    padding-left: 1em;
-    counter-reset: list-counter;
-}
-.wysiwyg-editor li,
-.post-content li {
-    display: flex;
-    align-items: baseline;
-    line-height: 1.8;
-    margin-bottom: 0.5em;
-}
-.wysiwyg-editor li::before,
-.post-content li::before {
-    font-weight: bold;
-    color: inherit;
-    min-width: 1.5em;
-    margin-right: 0.5em;
-    text-align: right;
-}
-.wysiwyg-editor ul > li::before,
-.post-content ul > li::before {
-    content: '•';
-}
-.wysiwyg-editor ol > li::before,
-.post-content ol > li::before {
-    counter-increment: list-counter;
-    content: counter(list-counter) ".";
-}
-
-/* =================================
-   SEARCH FORM
-   ================================= */
-.search-form {
-    display: inline-flex; /* Sử dụng flex để các item nằm trên một hàng */
-    vertical-align: middle; /* Căn giữa theo chiều dọc với các link khác */
-    margin-right: 20px;
-}
-
-.search-form input[type="search"] {
-    padding: 8px 12px;
-    border: 1px solid #555;
-    border-radius: 5px 0 0 5px; /* Bo góc trái */
-    background-color: #2a2a2a;
-    color: #e0e0e0;
-    font-size: 0.9rem;
-    min-width: 200px;
-    border-right: none; /* Bỏ border phải để nút bấm liền vào */
-}
-
-.search-form input[type="search"]:focus {
-    border-color: #58a6ff;
-    box-shadow: 0 0 0 0.2rem rgba(88, 166, 255, 0.25);
-    outline: none;
-}
-
-.search-form button {
-    padding: 8px 15px;
-    border: 1px solid #007bff;
-    background: #007bff;
-    color: white;
-    cursor: pointer;
-    border-radius: 0 5px 5px 0; /* Bo góc phải */
-    font-size: 0.9rem;
-    font-weight: bold;
-}
-
-.search-form button:hover {
-    background: #0056b3;
-}
-
-/* Kiểu chữ cho lời chào admin */
-.welcome-message {
-    padding: 0 15px;
-    font-weight: 500;
-}
-
-/* =================================
-   SEARCH RESULTS PAGE
-   ================================= */
-
-/* Áp dụng lại style của post-summary cho các bài viết trên trang tìm kiếm */
-.search-results .post-summary {
-    background-color: #2a2a2a;
-    border: 1px solid #444;
-    padding: 25px;
-    margin-top: 25px; /* Thêm khoảng cách trên để tách biệt với tiêu đề */
-    margin-bottom: 25px;
-    border-radius: 8px;
-    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-}
-
-.search-results .post-summary:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-}
-
-/* Đổi thẻ <h3> thành <h2> để đồng bộ với trang chủ */
-.search-results .post-summary h3 {
-    font-size: 1.75rem; /* Tương đương h2 */
-    margin-top: 0;
-}
-.search-results .post-summary h3 a {
-    color: #ffffff;
-}
-.search-results .post-summary h3 a:hover {
-    color: #58a6ff;
-}
-
-/* =================================
-   NÂNG CẤP GIAO DIỆN TRANG CHỦ
-   ================================= */
-.summary-grid {
-    display: grid;
-    /* Chia thành 2 cột: cột ảnh chiếm 1 phần, cột nội dung chiếm 3 phần */
-    grid-template-columns: 1fr 3fr; 
-    gap: 25px; /* Khoảng cách giữa 2 cột */
-    align-items: center; /* Căn giữa các item theo chiều dọc */
-}
-
-.summary-thumbnail .post-image {
-    width: 100%;
-    height: 150px; /* Cố định chiều cao ảnh thumbnail */
-    object-fit: cover; /* Đảm bảo ảnh lấp đầy khung mà không bị méo */
-    border-radius: 8px;
-    margin-bottom: 0; /* Bỏ margin cũ */
-}
-
-/* Nếu bài viết không có ảnh, cột nội dung sẽ chiếm toàn bộ chiều rộng */
-.summary-content {
-    grid-column: span 2; /* Mặc định cho nội dung chiếm 2 cột */
-}
-.summary-thumbnail + .summary-content {
-    grid-column: auto; /* Nếu có ảnh, nội dung chỉ chiếm 1 cột còn lại */
-}
-
-/* =================================
-   POST CATEGORY TAG
-   ================================= */
-.post-category {
-    display: inline-block;
-    background-color: #3a3a3a;
-    color: #b0b0b0;
-    font-size: 0.8em;
-    font-weight: bold;
-    padding: 3px 10px;
-    border-radius: 15px;
-    margin-left: 5px;
-    transition: background-color 0.2s, color 0.2s;
-}
-
-.post-category:hover {
-    background-color: #58a6ff;
-    color: #ffffff;
 }
