@@ -1,6 +1,5 @@
 <?php
-// file: post.php (Phiên bản cuối cùng - Sử dụng phương pháp load HTML chuẩn)
-
+// file: post.php (Phiên bản cuối cùng - Sử dụng link embed chuẩn của YouTube)
 require 'includes/database.php';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
@@ -21,27 +20,17 @@ if (!$post) {
     exit;
 }
 
-/**
- * Hàm làm sạch và xử lý nội dung bài viết một cách triệt để.
- * @param string $html Nội dung HTML thô từ cơ sở dữ liệu.
- * @return string Nội dung HTML đã được làm sạch và xử lý.
- */
 function process_post_content($html)
 {
     if (empty(trim($html))) {
         return '';
     }
 
-    // Bước 1: Làm sạch sâu dữ liệu đầu vào
     $html = mb_convert_encoding($html, 'UTF-8', 'UTF-8');
     $html = preg_replace('/[\x{200B}-\x{200D}\x{FEFF}]/u', '', $html);
     $html = str_replace("\xc2\xa0", ' ', $html);
 
-    // Bước 2: Phân tích HTML bằng DOMDocument
     $doc = new DOMDocument();
-
-    // === PHẦN NÂNG CẤP QUAN TRỌNG NHẤT ===
-    // Sử dụng thẻ <meta> để khai báo encoding, đây là cách chuẩn và ổn định nhất
     @$doc->loadHTML('<meta http-equiv="Content-Type" content="text/html; charset=utf-8">' . $html);
 
     $allowed_tags = ['b', 'i', 'u', 'br', 'span', 'a', 'ul', 'ol', 'li', 'div', 'p'];
@@ -55,7 +44,7 @@ function process_post_content($html)
     for ($i = $elements->length - 1; $i > -1; $i--) {
         $element = $elements->item($i);
         if (!$element || !isset($element->nodeName) || !in_array($element->nodeName, $allowed_tags)) {
-            continue; // Bỏ qua các thẻ không được phép như <html>, <body>, <meta>
+            continue;
         }
 
         if ($element->hasAttributes()) {
@@ -91,7 +80,6 @@ function process_post_content($html)
         }
     }
 
-    // Bước 3: Xuất ra nội dung sạch từ bên trong thẻ <body>
     $body = $doc->getElementsByTagName('body')->item(0);
     $output = '';
     if ($body && $body->hasChildNodes()) {
@@ -109,8 +97,7 @@ require 'includes/header.php';
 <article class="post-full">
     <h1><?php echo htmlspecialchars($post['title']); ?></h1>
     <p class="post-meta">Đăng bởi <strong><?php echo htmlspecialchars($post['author']); ?></strong> vào lúc
-        <?php echo date('d/m/Y H:i', strtotime($post['created_at'])); ?>
-    </p>
+        <?php echo date('d/m/Y H:i', strtotime($post['created_at'])); ?></p>
     <?php if ($post['image']): ?>
         <img src="uploads/<?php echo htmlspecialchars($post['image']); ?>"
             alt="<?php echo htmlspecialchars($post['title']); ?>" class="post-image-full">
@@ -118,16 +105,25 @@ require 'includes/header.php';
 
     <div class="post-content">
         <?php
-        // Quy trình xử lý 3 bước an toàn
-        // 1. "Rửa" và chuẩn hóa HTML
         $clean_html = process_post_content($post['content']);
 
-        // 2. Tìm và nhúng video trên chuỗi HTML đã sạch
-        $youtube_pattern = '/(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})(?:\S+)?/';
-        $youtube_replacement = '<div class="video-container"><iframe src="https://www.youtube.com/embed/$1" frameborder="0" allowfullscreen></iframe></div>';
-        $final_content = preg_replace($youtube_pattern, $youtube_replacement, $clean_html);
+        $youtube_pattern = '/https?:\/\/(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|shorts\/|watch\?.+&v=))([\w-]{11})[^\s<]*/';
 
-        // 3. Hiển thị nội dung cuối cùng
+        $final_content = preg_replace_callback(
+            $youtube_pattern,
+            function ($matches) {
+                $video_id = htmlspecialchars($matches[1], ENT_QUOTES, 'UTF-8');
+
+                // === SỬA LỖI CÚ PHÁP Ở ĐÂY: Dùng link /embed/ tiêu chuẩn của YouTube ===
+                $iframe_src = "https://www.youtube.com/embed/" . $video_id;
+
+                return '<div class="video-container">' .
+                    '<iframe src="' . $iframe_src . '" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>' .
+                    '</div>';
+            },
+            $clean_html
+        );
+
         echo $final_content;
         ?>
     </div>
@@ -135,6 +131,4 @@ require 'includes/header.php';
 
 <a href="index.php" class="back-link">← Quay lại trang chủ</a>
 
-<?php
-require 'includes/footer.php';
-?>
+<?php require 'includes/footer.php'; ?>

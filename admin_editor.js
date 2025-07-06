@@ -1,4 +1,4 @@
-// file: admin_editor.js (Bản nâng cấp cuối cùng - Đồng bộ MÀU SẮC cho danh sách)
+// file: admin_editor.js (Phiên bản Hoàn Thiện 2025)
 
 document.addEventListener('DOMContentLoaded', () => {
     const editor = document.getElementById('content-editor');
@@ -11,10 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
         editor.innerHTML = hiddenTextarea.value;
     }
 
-    /**
-     * Hàm áp dụng cỡ chữ, có khả năng đồng bộ với danh sách.
-     * @param {string | number} newSize - Cỡ chữ mới.
-     */
     function applyFontSize(newSize) {
         document.execCommand("styleWithCSS", false, true);
         document.execCommand('fontSize', false, '7');
@@ -36,15 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
         editor.focus();
     }
 
-    /**
-     * Hàm chung để thực thi các lệnh định dạng.
-     * Phiên bản này "thông minh" hơn, xử lý cả cỡ chữ và màu sắc cho danh sách.
-     */
     window.formatDoc = function (command, value = null) {
         const listCommands = ['insertUnorderedList', 'insertOrderedList'];
 
         if (listCommands.includes(command)) {
-            // Xử lý bảo toàn định dạng khi TẠO MỚI một danh sách
             const selection = window.getSelection();
             if (selection.rangeCount > 0 && !selection.isCollapsed) {
                 const element = selection.anchorNode.parentElement;
@@ -63,34 +54,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.execCommand(command, false, value);
             }
         } else {
-            // Với các lệnh khác, cứ thực hiện bình thường
             document.execCommand(command, false, value);
         }
 
-        // --- LOGIC NÂNG CẤP ĐỒNG BỘ MÀU SẮC ---
-        // Sau khi thực hiện lệnh, kiểm tra xem đó có phải là lệnh đổi màu không
         if (command === 'foreColor') {
             const selection = window.getSelection();
             if (selection.rangeCount) {
                 const parentElement = selection.anchorNode.parentElement;
                 const listItem = parentElement.closest('li');
-
-                // Nếu đang ở trong một mục danh sách, "thúc đẩy" màu lên cho cả thẻ <li>
-                // để dấu đầu dòng được kế thừa màu.
                 if (listItem) {
-                    listItem.style.color = value; // 'value' chính là mã màu mới
+                    listItem.style.color = value;
                 }
             }
         }
-        // --- KẾT THÚC LOGIC NÂNG CẤP ---
 
         editor.focus();
         updateToolbarUI();
     }
 
-    /**
-     * Hàm chèn link
-     */
     window.insertLink = function () {
         const url = prompt("Nhập URL của liên kết:", "https://");
         if (url) {
@@ -98,7 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Gán sự kiện cho các thành phần trên toolbar
     const fontSizeSelector = document.getElementById('fontSizeSelector');
     fontSizeSelector.addEventListener('change', (e) => {
         applyFontSize(e.target.value);
@@ -109,7 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
         formatDoc('foreColor', e.target.value);
     });
 
-    // --- Các hàm cập nhật giao diện (giữ nguyên) ---
     const updateToolbarUI = () => {
         ['bold', 'italic', 'underline', 'insertOrderedList', 'insertUnorderedList', 'justifyLeft', 'justifyCenter', 'justifyRight'].forEach(command => {
             const button = document.querySelector(`button[onclick*="${command}"]`);
@@ -129,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentSize = 16;
         if (sizeSpan) {
             currentSize = parseInt(sizeSpan.style.fontSize, 10);
-        } else {
+        } else if (editor) {
             currentSize = parseInt(getComputedStyle(editor).fontSize, 10);
         }
         fontSizeSelector.value = currentSize || '16';

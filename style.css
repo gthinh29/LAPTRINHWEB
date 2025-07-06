@@ -240,7 +240,6 @@ input[type="submit"]:hover, button:hover, .button-add-new:hover {
     align-items: center;
     gap: 4px;
 }
-
 .editor-toolbar button,
 .editor-toolbar input#currentFontSize {
     width: 40px;
@@ -365,17 +364,12 @@ footer {
 /* =================================
    NÂNG CẤP TOÀN DIỆN CHO DANH SÁCH (LIST)
    ================================= */
-/* === NÂNG CẤP #3: Fix lỗi mất dấu đầu dòng khi dùng Flexbox === */
-
-/* 1. Reset lại list và khởi tạo bộ đếm cho danh sách có số */
 .wysiwyg-editor ul, .post-content ul,
 .wysiwyg-editor ol, .post-content ol {
-    list-style: none; /* Bỏ các dấu đầu dòng mặc định */
-    padding-left: 1em; /* Căn lề trái cho toàn bộ khối danh sách */
-    counter-reset: list-counter; /* Khởi tạo bộ đếm cho <ol> */
+    list-style: none;
+    padding-left: 1em;
+    counter-reset: list-counter;
 }
-
-/* 2. Giữ lại Flexbox để căn chỉnh thẳng hàng */
 .wysiwyg-editor li,
 .post-content li {
     display: flex;
@@ -383,25 +377,20 @@ footer {
     line-height: 1.8;
     margin-bottom: 0.5em;
 }
-
-/* 3. "Vẽ" lại các dấu đầu dòng bằng pseudo-element ::before */
 .wysiwyg-editor li::before,
 .post-content li::before {
-    font-weight: bold;      /* In đậm dấu đầu dòng */
-    color: inherit;         /* Luôn lấy màu của chữ */
-    min-width: 1.5em;       /* Đảm bảo khoảng cách đều nhau */
-    margin-right: 0.5em;    /* Khoảng cách giữa dấu và chữ */
-    text-align: right;      /* Căn phải để các số 1. 10. 100. thẳng hàng */
+    font-weight: bold;
+    color: inherit;
+    min-width: 1.5em;
+    margin-right: 0.5em;
+    text-align: right;
 }
-
-/* 4. Định nghĩa nội dung cho từng loại danh sách */
 .wysiwyg-editor ul > li::before,
 .post-content ul > li::before {
-    content: '•'; /* Dấu chấm tròn cho danh sách <ul> */
+    content: '•';
 }
-
 .wysiwyg-editor ol > li::before,
 .post-content ol > li::before {
-    counter-increment: list-counter; /* Tăng bộ đếm */
-    content: counter(list-counter) "."; /* Hiển thị: 1. 2. 3. ... */
+    counter-increment: list-counter;
+    content: counter(list-counter) ".";
 }

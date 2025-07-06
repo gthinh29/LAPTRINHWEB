@@ -43,11 +43,11 @@ while ($row = mysqli_fetch_assoc($result)) {
 
                 <div class="post-excerpt">
                     <?php
-                    // === LOGIC MỚI, AN TOÀN ĐỂ TẠO TÓM TẮT ===
+                    // === NÂNG CẤP: Sử dụng mb_substr để xử lý tiếng Việt chính xác ===
                     // 1. Lột bỏ toàn bộ thẻ HTML để lấy văn bản thuần túy.
                     $plain_text = strip_tags($post['content']);
-                    // 2. Cắt 300 ký tự từ văn bản thuần túy đó.
-                    $excerpt = substr($plain_text, 0, 300);
+                    // 2. Dùng mb_substr để cắt 300 ký tự một cách an toàn cho UTF-8 (tiếng Việt).
+                    $excerpt = mb_substr($plain_text, 0, 300, 'UTF-8');
                     // 3. Hiển thị tóm tắt đã được làm sạch.
                     echo nl2br(htmlspecialchars($excerpt));
                     ?>...
