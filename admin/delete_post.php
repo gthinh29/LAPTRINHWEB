@@ -1,5 +1,4 @@
 <?php
-// file: admin/delete_post.php
 session_start();
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("location: ../dangnhap.php");
@@ -8,7 +7,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 
 require '../includes/database.php';
 
-// Kiểm tra ID bài viết có hợp lệ không
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     header("location: manage_posts.php");
     exit;
@@ -16,7 +14,6 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 
 $post_id = $_GET['id'];
 
-// (Tùy chọn) Xóa file ảnh khỏi thư mục uploads trước khi xóa trong CSDL
 $sql_get_image = "SELECT image FROM posts WHERE id = ?";
 $stmt_get_image = mysqli_prepare($conn, $sql_get_image);
 mysqli_stmt_bind_param($stmt_get_image, "i", $post_id);
@@ -30,12 +27,12 @@ if ($post && !empty($post['image'])) {
     }
 }
 
-// Xóa bài viết khỏi CSDL
+
 $sql = "DELETE FROM posts WHERE id = ?";
 $stmt = mysqli_prepare($conn, $sql);
 mysqli_stmt_bind_param($stmt, "i", $post_id);
 
-if(mysqli_stmt_execute($stmt)) {
+if (mysqli_stmt_execute($stmt)) {
     header("location: manage_posts.php?status=deleted");
 } else {
     header("location: manage_posts.php?status=error");

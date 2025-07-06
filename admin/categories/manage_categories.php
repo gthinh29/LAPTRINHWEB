@@ -6,7 +6,6 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 }
 require '../../includes/database.php';
 
-// --- LOGIC PHÂN TRANG ---
 $categories_per_page = 10;
 $count_sql = "SELECT COUNT(id) AS total FROM categories";
 $count_result = mysqli_query($conn, $count_sql);
@@ -19,7 +18,6 @@ if ($current_page < 1)
     $current_page = 1;
 $offset = ($current_page - 1) * $categories_per_page;
 
-// --- LẤY DỮ LIỆU DANH MỤC ---
 $sql = "SELECT * FROM categories ORDER BY name ASC LIMIT ? OFFSET ?";
 $stmt = mysqli_prepare($conn, $sql);
 mysqli_stmt_bind_param($stmt, "ii", $categories_per_page, $offset);

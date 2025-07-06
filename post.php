@@ -1,5 +1,5 @@
 <?php
-// file: post.php (Đã cập nhật để hiển thị danh mục)
+
 require 'includes/database.php';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
@@ -8,7 +8,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 }
 $post_id = $_GET['id'];
 
-// === NÂNG CẤP SQL: Dùng LEFT JOIN để lấy cả tên danh mục ===
+
 $sql_post = "SELECT p.title, p.content, p.author, p.image, p.created_at, c.id as category_id, c.name as category_name 
              FROM posts p
              LEFT JOIN categories c ON p.category_id = c.id

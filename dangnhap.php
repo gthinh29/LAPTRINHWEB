@@ -1,8 +1,8 @@
 <?php
-// file: dangnhap.php (đã bỏ hoàn toàn role)
+
 session_start();
 
-// Nếu đã đăng nhập, chuyển thẳng vào trang admin để không phải đăng nhập lại
+
 if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
     header("location: admin/manage_posts.php");
     exit;
@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($username) || empty($password)) {
         $error = 'Vui lòng nhập tên đăng nhập và mật khẩu.';
     } else {
-        // Câu lệnh SQL không cần lấy cột 'role'
+
         $sql = "SELECT id, username, password FROM users WHERE username = ?";
         $stmt = mysqli_prepare($conn, $sql);
         mysqli_stmt_bind_param($stmt, "s", $username);
@@ -26,13 +26,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $result = mysqli_stmt_get_result($stmt);
         $user = mysqli_fetch_assoc($result);
 
-        // Chỉ cần xác thực mật khẩu
+
         if ($user && password_verify($password, $user['password'])) {
-            // Đặt session đăng nhập
+
             $_SESSION['loggedin'] = true;
             $_SESSION['username'] = $user['username'];
 
-            // Luôn chuyển hướng đến trang quản trị
+
             header("location: admin/manage_posts.php");
             exit;
         } else {
@@ -43,11 +43,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 ?>
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <title>Đăng nhập Admin</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="login-page-body">
     <div class="login-container">
         <h1>Đăng nhập Admin</h1>
@@ -67,4 +69,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </form>
     </div>
 </body>
+
 </html>

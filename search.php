@@ -60,7 +60,7 @@ $page_title = "Kết quả tìm kiếm cho '" . htmlspecialchars($search_query) 
                         </p>
                         <div class="post-excerpt">
                             <?php
-                            // === SAO CHÉP TỪ INDEX.PHP - ĐẢM BẢO NHẤT QUÁN ===
+
                             $content_for_excerpt = html_entity_decode(str_replace('&nbsp;', ' ', $post['content']));
                             $content_with_newlines = preg_replace('/<br\s?\/?>/i', "\n", $content_for_excerpt);
                             $content_with_newlines = preg_replace('/(<\/p>|<\/div>)/i', "\n", $content_with_newlines);

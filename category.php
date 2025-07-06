@@ -60,22 +60,17 @@ while ($row = mysqli_fetch_assoc($result_posts)) {
                         </p>
                         <div class="post-excerpt">
                             <?php
-                            // === SAO CHÉP TỪ INDEX.PHP - ĐẢM BẢO NHẤT QUÁN ===
-                            // 1. Thay thế &nbsp; và giải mã các thực thể HTML khác
+
                             $content_for_excerpt = html_entity_decode(str_replace('&nbsp;', ' ', $post['content']));
 
-                            // 2. Xử lý xuống dòng từ các thẻ <br>, <p>, <div>
                             $content_with_newlines = preg_replace('/<br\s?\/?>/i', "\n", $content_for_excerpt);
                             $content_with_newlines = preg_replace('/(<\/p>|<\/div>)/i', "\n", $content_with_newlines);
 
-                            // 3. Loại bỏ tất cả các thẻ HTML còn lại
                             $plain_text = strip_tags($content_with_newlines);
 
-                            // 4. (Tùy chọn) Loại bỏ các URL để đoạn trích gọn gàng hơn
                             $url_pattern = '/https?:\/\/[^\s<]+/';
                             $text_without_links = preg_replace($url_pattern, '', $plain_text);
 
-                            // 5. Rút gọn văn bản và hiển thị
                             $excerpt = mb_substr($text_without_links, 0, 150, 'UTF-8');
                             echo htmlspecialchars($excerpt);
                             ?>...

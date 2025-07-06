@@ -16,7 +16,7 @@ if ($current_page < 1)
     $current_page = 1;
 $offset = ($current_page - 1) * $posts_per_page;
 
-// === NÂNG CẤP SQL: Dùng LEFT JOIN để lấy cả tên danh mục ===
+
 $sql = "SELECT p.id, p.title, p.author, p.content, p.image, p.created_at, c.id as category_id, c.name as category_name 
         FROM posts p
         LEFT JOIN categories c ON p.category_id = c.id
@@ -61,7 +61,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 
                         <div class="post-excerpt">
                             <?php
-                            // Thêm dòng này để xử lý &nbsp; và các thực thể HTML khác
+
                             $content_for_excerpt = html_entity_decode(str_replace('&nbsp;', ' ', $post['content']));
 
                             $content_with_newlines = preg_replace('/<br\s?\/?>/i', "\n", $content_for_excerpt);
