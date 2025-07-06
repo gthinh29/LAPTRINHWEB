@@ -1,31 +1,41 @@
+/* =================================
+   CÀI ĐẶT CHUNG & GIAO DIỆN TỐI (DARK MODE)
+   ================================= */
 body {
     font-family: 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
     margin: 0;
-    background: #1e1e1e; /* Nền tối */
-    color: #e0e0e0;      /* Chữ sáng */
+    background: #1e1e1e;
+    color: #e0e0e0;
 }
 
 .container {
     width: 80%;
     margin: auto;
     overflow: hidden;
-    padding: 0 20px;
+    padding: 20px;
 }
 
+a {
+    color: #58a6ff;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+a:hover {
+    color: #8abfff;
+}
+
+/* =================================
+   HEADER & NAVIGATION
+   ================================= */
 header {
-    background: #2a2a2a; /* Nền header tối hơn */
+    background: #2a2a2a;
     color: #ffffff;
     padding: 1rem 0;
-    border-bottom: 1px solid #444; /* Viền mờ */
+    border-bottom: 1px solid #444;
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-header a {
-    color: #58a6ff; /* Link màu xanh sáng */
-    text-decoration: none;
 }
 
 header h1 {
@@ -33,117 +43,365 @@ header h1 {
     padding-left: 20px;
     font-size: 24px;
 }
+header h1 a { color: #fff; }
 
 header nav {
-    margin-top: 0;
     padding-right: 20px;
 }
-
 header nav a {
     padding: 0 15px;
     font-weight: 500;
 }
 
-form {
+/* =================================
+   DANH SÁCH BÀI VIẾT (POST LIST)
+   ================================= */
+.post-list .post-summary {
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+.post-list .post-summary:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+.post-summary h2 a { color: #ffffff; }
+.post-summary h2 a:hover { color: #58a6ff; }
+.read-more { display: inline-block; margin-top: 15px; font-weight: bold; }
+
+/* =================================
+   CHI TIẾT BÀI VIẾT & HÌNH ẢNH
+   ================================= */
+.post-full {
+    background: #2a2a2a;
+    padding: 30px;
     margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #444;
 }
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
+.post-meta { font-size: 0.9em; color: #a0a0a0; margin-bottom: 15px; }
+.post-image, .post-image-full { 
+    width: 90%;
+    max-width: 750px;
+    height: auto;
     display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
+    margin: 25px auto;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
+.post-content { font-size: 1.1em; line-height: 1.7; }
+.back-link { font-weight: bold; font-size: 1.1em; }
 
-.post-image {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-    margin-bottom: 15px;
-}
-.post-image-full {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-    margin-bottom: 20px;
-}
-.form-group input[type="password"],
-.form-group textarea {
+/* =================================
+   FORM CHUNG & TRANG ADMIN (GIAO DIỆN TỐI)
+   ================================= */
+.admin-form { margin-bottom: 20px; }
+.admin-form .form-group { margin-bottom: 20px; }
+.admin-form .form-group label { display: block; margin-bottom: 8px; font-weight: bold; }
+.admin-form .form-group input[type="text"],
+.admin-form .form-group input[type="file"],
+.admin-form .form-group textarea {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #555;
     border-radius: 5px;
     box-sizing: border-box;
     background-color: #2a2a2a;
     color: #e0e0e0;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
-
-input[type="submit"],
-button {
+.admin-form .form-group input:focus, .admin-form .form-group textarea:focus {
+    border-color: #58a6ff;
+    box-shadow: 0 0 0 0.2rem rgba(88, 166, 255, 0.25);
+    outline: none;
+}
+input[type="submit"], button, .button-add-new {
     background: #007bff;
     color: #fff;
     border: 0;
-    padding: 10px 15px;
+    padding: 12px 20px;
     cursor: pointer;
     border-radius: 5px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
     transition: background-color 0.3s;
 }
-
-input[type="submit"]:hover,
-button:hover {
+input[type="submit"]:hover, button:hover, .button-add-new:hover {
     background: #0056b3;
+    color: #fff;
 }
+.admin-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+.admin-table th, .admin-table td { border: 1px solid #444; padding: 12px; text-align: left; }
+.admin-table th { background-color: #333; }
+.admin-table a { color: white; text-decoration: none; padding: 6px 12px; border-radius: 4px; margin-right: 5px; }
+.admin-table .edit-btn { background-color: #ffc107; color: black; }
+.admin-table .delete-btn { background-color: #dc3545; color: white; }
 
-.post-list .post-summary{
-    background-color: #2a2a2a; 
-    border: 1px solid #444; 
-    padding: 20px;  
-    margin-bottom: 20px;
-    border-radius: 8px; 
+/* =================================
+   TRANG ĐĂNG NHẬP (GIAO DIỆN SÁNG)
+   ================================= */
+.login-page-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f2f5;
 }
-
-.post-full,
-.comments-section {
-    background: #2a2a2a;
-    padding: 20px;
-    margin-bottom: 20px;
+.login-container {
+    padding: 30px 40px;
+    border-radius: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    width: 340px;
+    color: #333;
+}
+.login-container h1 { text-align: center; margin-bottom: 30px; }
+.login-container form { display: flex; flex-direction: column; }
+.login-container .form-group { position: relative; margin-bottom: 25px; }
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: 100%;
+    padding: 15px;
     border-radius: 8px;
-    border: 1px solid #444;
+    border: 1px solid #adadad;
+    background-color: transparent;
+    color: #333;
+    font-size: 1rem;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 2;
 }
-
-.post-summary h2 a {
-    text-decoration: none;
-    color: #ffffff;
+.login-container .form-group label {
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    color: #8d8d8d;
+    pointer-events: none;
+    background-color: transparent;
+    padding: 0 5px;
+    transition: all 0.2s ease;
+    z-index: 1;
 }
-
-.post-summary h2 a:hover {
-    color: #58a6ff;
+.login-container .form-group input:focus + label,
+.login-container .form-group input:not(:placeholder-shown) + label {
+    top: -10px;
+    font-size: 0.9rem;
+    color: #006eff;
+    background-color: #ffffff;
+    z-index: 3;
 }
-
-/* --- Search Bar --- */
-.search-bar {
-    margin-bottom: 30px;
+.login-container .form-group input:focus {
+    border-color: #006eff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+.login-container input[type="submit"] {
+    background: linear-gradient(135deg, #0034de, #006eff);
+    border: none;
+    font-weight: bold;
     margin-top: 10px;
 }
-
-.search-bar form {
-    display: flex;
-    gap: 10px;
+.error {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-.search-bar input[type="text"] {
-    flex-grow: 1;
+/* =================================
+   PHÂN TRANG
+   ================================= */
+.pagination { margin-top: 2rem; text-align: center; }
+.pagination a { padding: 8px 16px; border: 1px solid #444; margin: 0 4px; border-radius: 4px; }
+.pagination a:hover { background-color: #333; }
+.pagination a.active { background-color: #007bff; color: white; border-color: #007bff; cursor: default; }
+
+/* =================================
+   TRÌNH SOẠN THẢO WYSIWYG
+   ================================= */
+.editor-toolbar {
+    background-color: #333;
+    padding: 8px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
     border: 1px solid #555;
-    border-radius: 5px;
-    padding: 10px 15px;
+    border-bottom: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+}
+
+.editor-toolbar button,
+.editor-toolbar input#currentFontSize {
+    width: 40px;
+    height: 40px;
+    margin: 2px;
+    padding: 0;
+    border: 1px solid #666;
+    border-radius: 4px;
+    background-color: #444;
+    color: #fff;
+    vertical-align: middle;
+    box-sizing: border-box;
     font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+}
+.editor-toolbar button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 18px;
+}
+.editor-toolbar button:hover {
+    background-color: #555;
+}
+.editor-toolbar button.active {
+    background-color: #007bff;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+.wysiwyg-editor {
+    min-height: 250px;
+    border: 1px solid #555;
+    border-radius: 0 0 5px 5px;
     background-color: #2a2a2a;
     color: #e0e0e0;
+    padding: 12px;
+    font-size: 1rem;
+    line-height: 1.6;
+    overflow-y: auto;
+    margin-top: -1px;
+}
+.wysiwyg-editor:focus {
+    border-color: #58a6ff;
+    box-shadow: 0 0 0 0.2rem rgba(88, 166, 255, 0.25);
+    outline: none;
+}
+.editor-toolbar input[type="color"] {
+    width: 40px;
+    height: 40px;
+    padding: 2px;
+    border: 1px solid #666;
+    border-radius: 4px;
+    background-color: #444;
+    cursor: pointer;
+    vertical-align: middle;
+}
+.editor-toolbar button[title*="Căn"] {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+}
+.editor-toolbar select {
+    background-color: #444;
+    color: #fff;
+    border: 1px solid #666;
+    border-radius: 4px;
+    padding: 10px; 
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+    vertical-align: middle;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    padding-right: 32px;
+}
+.editor-toolbar select:hover {
+    background-color: #555;
+}
+.editor-toolbar button svg {
+    display: block;
 }
 
-.search-bar button {
-    padding: 10px 20px;
+/* =================================
+   VIDEO NHÚNG
+   ================================= */
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    background: #000;
+    margin: 20px 0;
+    border-radius: 8px;
+}
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* =================================
+   FOOTER
+   ================================= */
+footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 30px;
+    background: #2a2a2a;
+    color: #a0a0a0;
+    border-top: 1px solid #444;
+}
+
+/* =================================
+   NÂNG CẤP TOÀN DIỆN CHO DANH SÁCH (LIST)
+   ================================= */
+/* === NÂNG CẤP #3: Fix lỗi mất dấu đầu dòng khi dùng Flexbox === */
+
+/* 1. Reset lại list và khởi tạo bộ đếm cho danh sách có số */
+.wysiwyg-editor ul, .post-content ul,
+.wysiwyg-editor ol, .post-content ol {
+    list-style: none; /* Bỏ các dấu đầu dòng mặc định */
+    padding-left: 1em; /* Căn lề trái cho toàn bộ khối danh sách */
+    counter-reset: list-counter; /* Khởi tạo bộ đếm cho <ol> */
+}
+
+/* 2. Giữ lại Flexbox để căn chỉnh thẳng hàng */
+.wysiwyg-editor li,
+.post-content li {
+    display: flex;
+    align-items: baseline;
+    line-height: 1.8;
+    margin-bottom: 0.5em;
+}
+
+/* 3. "Vẽ" lại các dấu đầu dòng bằng pseudo-element ::before */
+.wysiwyg-editor li::before,
+.post-content li::before {
+    font-weight: bold;      /* In đậm dấu đầu dòng */
+    color: inherit;         /* Luôn lấy màu của chữ */
+    min-width: 1.5em;       /* Đảm bảo khoảng cách đều nhau */
+    margin-right: 0.5em;    /* Khoảng cách giữa dấu và chữ */
+    text-align: right;      /* Căn phải để các số 1. 10. 100. thẳng hàng */
+}
+
+/* 4. Định nghĩa nội dung cho từng loại danh sách */
+.wysiwyg-editor ul > li::before,
+.post-content ul > li::before {
+    content: '•'; /* Dấu chấm tròn cho danh sách <ul> */
+}
+
+.wysiwyg-editor ol > li::before,
+.post-content ol > li::before {
+    counter-increment: list-counter; /* Tăng bộ đếm */
+    content: counter(list-counter) "."; /* Hiển thị: 1. 2. 3. ... */
 }

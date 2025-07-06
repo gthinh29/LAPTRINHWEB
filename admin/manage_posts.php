@@ -1,11 +1,12 @@
 <?php
 session_start();
-require '../database.php';
 
-if (!isset($_SESSION['loggedin']) || $_SESSION['role'] !== 'admin') {
-    header('location: ../index.php');
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header("location: ../dangnhap.php");
     exit;
 }
+
+require '../includes/database.php';
 
 $posts = [];
 $sql = "SELECT id, title, author, created_at FROM posts ORDER BY created_at DESC";
@@ -22,9 +23,16 @@ while ($row = mysqli_fetch_assoc($result)) {
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
-    <header><h1>Quản lý bài viết</h1></header>
+    <header>
+        <h1>Quản lý bài viết</h1>
+        <nav>
+            <span>Chào, <strong><?php echo htmlspecialchars($_SESSION['username']); ?></strong>!</span>
+            <a href="../index.php">Xem trang chủ</a>
+            <a href="../logout.php">Đăng xuất</a>
+        </nav>
+    </header>
     <main class="container">
-        <a href="dashboard.php">&larr; Quay lại Dashboard</a> | <a href="add_post.php">Thêm bài viết mới</a>
+        <a href="add_post.php" class="button-add-new">Thêm bài viết mới</a>
         <br><br>
         <table class="admin-table">
             <thead>
@@ -36,17 +44,23 @@ while ($row = mysqli_fetch_assoc($result)) {
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($posts as $post): ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($post['title']); ?></td>
-                    <td><?php echo htmlspecialchars($post['author']); ?></td>
-                    <td><?php echo date('d/m/Y', strtotime($post['created_at'])); ?></td>
-                    <td>
-                        <a href="edit_post.php?id=<?php echo $post['id']; ?>" class="edit-btn">Sửa</a>
-                        <a href="delete_post.php?id=<?php echo $post['id']; ?>" class="delete-btn" onclick="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?');">Xóa</a>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
+                <?php if (count($posts) > 0): ?>
+                    <?php foreach ($posts as $post): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($post['title']); ?></td>
+                        <td><?php echo htmlspecialchars($post['author']); ?></td>
+                        <td><?php echo date('d/m/Y', strtotime($post['created_at'])); ?></td>
+                        <td>
+                            <a href="edit_post.php?id=<?php echo $post['id']; ?>" class="edit-btn">Sửa</a>
+                            <a href="delete_post.php?id=<?php echo $post['id']; ?>" class="delete-btn" onclick="return confirm('Bạn có chắc chắn muốn xóa bài viết này không?');">Xóa</a>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="4" style="text-align: center;">Chưa có bài viết nào.</td>
+                    </tr>
+                <?php endif; ?>
             </tbody>
         </table>
     </main>
