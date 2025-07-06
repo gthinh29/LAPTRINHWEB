@@ -473,3 +473,30 @@ footer {
 .search-results .post-summary h3 a:hover {
     color: #58a6ff;
 }
+
+/* =================================
+   NÂNG CẤP GIAO DIỆN TRANG CHỦ
+   ================================= */
+.summary-grid {
+    display: grid;
+    /* Chia thành 2 cột: cột ảnh chiếm 1 phần, cột nội dung chiếm 3 phần */
+    grid-template-columns: 1fr 3fr; 
+    gap: 25px; /* Khoảng cách giữa 2 cột */
+    align-items: center; /* Căn giữa các item theo chiều dọc */
+}
+
+.summary-thumbnail .post-image {
+    width: 100%;
+    height: 150px; /* Cố định chiều cao ảnh thumbnail */
+    object-fit: cover; /* Đảm bảo ảnh lấp đầy khung mà không bị méo */
+    border-radius: 8px;
+    margin-bottom: 0; /* Bỏ margin cũ */
+}
+
+/* Nếu bài viết không có ảnh, cột nội dung sẽ chiếm toàn bộ chiều rộng */
+.summary-content {
+    grid-column: span 2; /* Mặc định cho nội dung chiếm 2 cột */
+}
+.summary-thumbnail + .summary-content {
+    grid-column: auto; /* Nếu có ảnh, nội dung chỉ chiếm 1 cột còn lại */
+}

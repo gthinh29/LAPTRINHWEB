@@ -31,29 +31,49 @@ while ($row = mysqli_fetch_assoc($result)) {
     <?php if (count($posts) > 0): ?>
         <?php foreach ($posts as $post): ?>
             <article class="post-summary">
-                <h2><a href="post.php?id=<?php echo $post['id']; ?>"><?php echo htmlspecialchars($post['title']); ?></a></h2>
-                <p class="post-meta">Đăng bởi <strong><?php echo htmlspecialchars($post['author']); ?></strong> vào lúc
-                    <?php echo date('d/m/Y', strtotime($post['created_at'])); ?></p>
-                <?php if ($post['image']): ?>
-                    <a href="post.php?id=<?php echo $post['id']; ?>">
-                        <img src="uploads/<?php echo htmlspecialchars($post['image']); ?>"
-                            alt="<?php echo htmlspecialchars($post['title']); ?>" class="post-image">
-                    </a>
-                <?php endif; ?>
 
-                <div class="post-excerpt">
-                    <?php
-                    // === NÂNG CẤP: Sử dụng mb_substr để xử lý tiếng Việt chính xác ===
-                    // 1. Lột bỏ toàn bộ thẻ HTML để lấy văn bản thuần túy.
-                    $plain_text = strip_tags($post['content']);
-                    // 2. Dùng mb_substr để cắt 300 ký tự một cách an toàn cho UTF-8 (tiếng Việt).
-                    $excerpt = mb_substr($plain_text, 0, 300, 'UTF-8');
-                    // 3. Hiển thị tóm tắt đã được làm sạch.
-                    echo nl2br(htmlspecialchars($excerpt));
-                    ?>...
+                <div class="summary-grid">
+                    <?php if ($post['image']): ?>
+                        <div class="summary-thumbnail">
+                            <a href="post.php?id=<?php echo $post['id']; ?>">
+                                <img src="uploads/<?php echo htmlspecialchars($post['image']); ?>"
+                                    alt="<?php echo htmlspecialchars($post['title']); ?>" class="post-image">
+                            </a>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="summary-content">
+                        <h2><a href="post.php?id=<?php echo $post['id']; ?>"><?php echo htmlspecialchars($post['title']); ?></a>
+                        </h2>
+                        <p class="post-meta">Đăng bởi <strong><?php echo htmlspecialchars($post['author']); ?></strong> vào lúc
+                            <?php echo date('d/m/Y', strtotime($post['created_at'])); ?></p>
+
+                        <div class="post-excerpt">
+                            <?php
+                            // === LOGIC TÓM TẮT THÔNG MINH HƠN ===
+                    
+                            // 1. Ghi nhớ các dấu xuống dòng bằng cách chuyển thẻ <br>, </p>, </div> thành ký tự "\n"
+                            $content_with_newlines = preg_replace('/<br\s?\/?>/i', "\n", $post['content']);
+                            $content_with_newlines = preg_replace('/(<\/p>|<\/div>)/i', "\n", $content_with_newlines);
+
+                            // 2. Lột bỏ tất cả các thẻ HTML còn lại
+                            $plain_text = strip_tags($content_with_newlines);
+
+                            // 3. Xóa tất cả các URL khỏi văn bản
+                            $url_pattern = '/https?:\/\/[^\s<]+/';
+                            $text_without_links = preg_replace($url_pattern, '', $plain_text);
+
+                            // 4. Cắt 150 ký tự từ văn bản đã được làm sạch hoàn toàn
+                            $excerpt = mb_substr($text_without_links, 0, 150, 'UTF-8');
+
+                            // 5. Hiển thị, đồng thời chuyển các ký tự "\n" đã ghi nhớ trở lại thành thẻ <br>
+                            echo nl2br(htmlspecialchars($excerpt));
+                            ?>...
+                        </div>
+                        <a href="post.php?id=<?php echo $post['id']; ?>" class="read-more">Đọc thêm &rarr;</a>
+                    </div>
                 </div>
 
-                <a href="post.php?id=<?php echo $post['id']; ?>" class="read-more">Đọc thêm &rarr;</a>
             </article>
         <?php endforeach; ?>
     <?php else: ?>
