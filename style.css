@@ -600,3 +600,61 @@ footer {
     color: #a0a0a0;
     border-top: 1px solid #444;
 }
+
+/* =================================
+   DROPDOWN CATEGORY MENU
+   ================================= */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown .dropbtn {
+    /* Các thuộc tính này để nút "Danh Mục" trông giống các nút khác trên menu */
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    color: #c0c0c0;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+header nav .dropdown:hover .dropbtn {
+    background-color: #3a3a3a;
+    color: #fff;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    min-width: 220px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+    z-index: 10;
+    border-radius: 6px;
+    border: 1px solid #444;
+    padding: 8px 0;
+    margin-top: 5px; 
+}
+
+.dropdown-content a {
+    color: #e0e0e0;
+    padding: 10px 16px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.9rem;
+    width: 100%;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.dropdown-content a:hover {
+    background-color: #58a6ff;
+    color: #ffffff;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
