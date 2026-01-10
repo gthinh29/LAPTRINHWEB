@@ -1,40 +1,41 @@
 <?php
-
-$page_title = "Trang chủ - Blog Công Nghệ";
-
 require 'includes/header.php';
 
-$posts_per_page = 5;
-$count_sql = "SELECT COUNT(id) AS total FROM posts";
-$count_result = mysqli_query($conn, $count_sql);
-$total_posts = mysqli_fetch_assoc($count_result)['total'];
-$total_pages = ceil($total_posts / $posts_per_page);
-$current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
-if ($current_page > $total_pages && $total_pages > 0)
-    $current_page = $total_pages;
-if ($current_page < 1)
-    $current_page = 1;
-$offset = ($current_page - 1) * $posts_per_page;
-
-
-$sql = "SELECT p.id, p.title, p.author, p.content, p.image, p.created_at, c.id as category_id, c.name as category_name 
-        FROM posts p
-        LEFT JOIN categories c ON p.category_id = c.id
-        ORDER BY p.created_at DESC 
-        LIMIT ? OFFSET ?";
-
-$stmt = mysqli_prepare($conn, $sql);
-mysqli_stmt_bind_param($stmt, "ii", $posts_per_page, $offset);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
+$search_query = '';
 $posts = [];
-while ($row = mysqli_fetch_assoc($result)) {
-    $posts[] = $row;
+$search_error = '';
+
+if (isset($_GET['query']) && !empty(trim($_GET['query']))) {
+    $search_query = trim($_GET['query']);
+    $search_term = "%" . $search_query . "%";
+
+    $sql = "SELECT p.id, p.title, p.author, p.content, p.image, p.created_at, c.id as category_id, c.name as category_name 
+            FROM posts p
+            LEFT JOIN categories c ON p.category_id = c.id
+            WHERE p.title LIKE ? OR p.content LIKE ? 
+            ORDER BY p.created_at DESC";
+
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "ss", $search_term, $search_term);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    while ($row = mysqli_fetch_assoc($result)) {
+        $posts[] = $row;
+    }
+} else {
+    $search_error = "Vui lòng nhập từ khóa để tìm kiếm.";
 }
+
+$page_title = "Kết quả tìm kiếm cho '" . htmlspecialchars($search_query) . "'";
 ?>
 
-<section class="post-list">
-    <?php if (count($posts) > 0): ?>
+<section class="search-results">
+    <h2><?php echo $page_title; ?></h2>
+
+    <?php if (!empty($search_error)): ?>
+        <p><?php echo $search_error; ?></p>
+    <?php elseif (count($posts) > 0): ?>
         <?php foreach ($posts as $post): ?>
             <article class="post-summary">
                 <div class="summary-grid">
@@ -46,7 +47,6 @@ while ($row = mysqli_fetch_assoc($result)) {
                             </a>
                         </div>
                     <?php endif; ?>
-
                     <div class="summary-content">
                         <h2><a href="post.php?id=<?php echo $post['id']; ?>"><?php echo htmlspecialchars($post['title']); ?></a>
                         </h2>
@@ -58,12 +58,10 @@ while ($row = mysqli_fetch_assoc($result)) {
                                     class="post-category"><?php echo htmlspecialchars($post['category_name']); ?></a>
                             <?php endif; ?>
                         </p>
-
                         <div class="post-excerpt">
                             <?php
 
                             $content_for_excerpt = html_entity_decode(str_replace('&nbsp;', ' ', $post['content']));
-
                             $content_with_newlines = preg_replace('/<br\s?\/?>/i', "\n", $content_for_excerpt);
                             $content_with_newlines = preg_replace('/(<\/p>|<\/div>)/i', "\n", $content_with_newlines);
                             $plain_text = strip_tags($content_with_newlines);
@@ -73,23 +71,15 @@ while ($row = mysqli_fetch_assoc($result)) {
                             echo htmlspecialchars($excerpt);
                             ?>...
                         </div>
-                        <a href="post.php?id=<?php echo $post['id']; ?>" class="read-more">Đọc thêm &rarr;</a>
+                        <a href="post.php?id=<?php echo $post['id']; ?>" class="read-more">Đọc thêm →</a>
                     </div>
                 </div>
             </article>
         <?php endforeach; ?>
     <?php else: ?>
-        <p>Không tìm thấy bài viết nào.</p>
+        <p>Không tìm thấy bài viết nào phù hợp với từ khóa
+            "<strong><?php echo htmlspecialchars($search_query); ?></strong>".</p>
     <?php endif; ?>
 </section>
-
-<nav class="pagination">
-    <?php if ($total_pages > 1): ?>
-        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-            <a href="index.php?page=<?php echo $i; ?>" class="<?php if ($i == $current_page)
-                   echo 'active'; ?>"><?php echo $i; ?></a>
-        <?php endfor; ?>
-    <?php endif; ?>
-</nav>
 
 <?php require 'includes/footer.php'; ?>

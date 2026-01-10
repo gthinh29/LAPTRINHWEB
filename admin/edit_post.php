@@ -4,8 +4,14 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("location: ../dangnhap.php");
     exit;
 }
-
 require '../includes/database.php';
+
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    header("location: manage_posts.php");
+    exit;
+}
+$post_id = $_GET['id'];
+$error = '';
 
 $sql_categories = "SELECT id, name FROM categories ORDER BY name ASC";
 $result_categories = mysqli_query($conn, $sql_categories);
@@ -14,40 +20,48 @@ while ($row = mysqli_fetch_assoc($result_categories)) {
     $categories[] = $row;
 }
 
-$title = $content = '';
-$category_id = null;
-$error = '';
-$author = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : '';
+$sql_get = "SELECT title, content, author, image, category_id FROM posts WHERE id = ?";
+$stmt_get = mysqli_prepare($conn, $sql_get);
+mysqli_stmt_bind_param($stmt_get, "i", $post_id);
+mysqli_stmt_execute($stmt_get);
+$result_get = mysqli_stmt_get_result($stmt_get);
+$post = mysqli_fetch_assoc($result_get);
+
+if (!$post) {
+    header("location: manage_posts.php");
+    exit;
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = trim($_POST['title']);
     $content = trim($_POST['content']);
-    $author_post = trim($_POST['author']);
+    $author = trim($_POST['author']);
     $category_id = !empty($_POST['category_id']) ? (int) $_POST['category_id'] : null;
-    $image_name = '';
+    $current_image = $post['image'];
 
-    if (empty($title) || empty($content) || empty($author_post)) {
+    if (empty($title) || empty($content) || empty($author)) {
         $error = "Tiêu đề, nội dung và tác giả không được để trống.";
     } else {
+        $image_name = $current_image;
         if (isset($_FILES['image']) && $_FILES['image']['error'] == 0 && !empty($_FILES['image']['name'])) {
             $target_dir = "../uploads/";
-            if (!is_dir($target_dir)) {
-                mkdir($target_dir, 0755, true);
+            if (!empty($current_image) && file_exists($target_dir . $current_image)) {
+                unlink($target_dir . $current_image);
             }
             $image_name = time() . '_' . basename($_FILES["image"]["name"]);
             $target_file = $target_dir . $image_name;
             move_uploaded_file($_FILES["image"]["tmp_name"], $target_file);
         }
 
-        $sql = "INSERT INTO posts (author, title, content, image, category_id) VALUES (?, ?, ?, ?, ?)";
-        $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, "ssssi", $author_post, $title, $content, $image_name, $category_id);
+        $sql_update = "UPDATE posts SET title = ?, content = ?, author = ?, image = ?, category_id = ? WHERE id = ?";
+        $stmt_update = mysqli_prepare($conn, $sql_update);
+        mysqli_stmt_bind_param($stmt_update, "ssssii", $title, $content, $author, $image_name, $category_id, $post_id);
 
-        if (mysqli_stmt_execute($stmt)) {
-            header("location: manage_posts.php?status=added");
+        if (mysqli_stmt_execute($stmt_update)) {
+            header("location: manage_posts.php?status=updated");
             exit;
         } else {
-            $error = "Đã có lỗi xảy ra. Vui lòng thử lại.";
+            $error = "Cập nhật thất bại, vui lòng thử lại.";
         }
     }
 }
@@ -57,7 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <head>
     <meta charset="UTF-8">
-    <title>Thêm bài viết mới</title>
+    <title>Sửa bài viết</title>
     <link rel="stylesheet" href="../style.css">
 </head>
 
@@ -75,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <main class="container">
         <div class="form-container">
             <div class="form-header">
-                <h1>Thêm bài viết mới</h1>
+                <h1>Sửa bài viết</h1>
                 <a href="manage_posts.php" class="back-link">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                         <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"></path>
@@ -88,22 +102,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <p class="error"><?php echo $error; ?></p>
             <?php endif; ?>
 
-            <form class="admin-form" action="add_post.php" method="post" enctype="multipart/form-data">
+            <form class="admin-form" action="edit_post.php?id=<?php echo $post_id; ?>" method="post"
+                enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="title">Tiêu đề</label>
-                    <input type="text" name="title" id="title" value="<?php echo htmlspecialchars($title); ?>" required>
+                    <input type="text" name="title" id="title" value="<?php echo htmlspecialchars($post['title']); ?>"
+                        required>
                 </div>
                 <div class="form-group">
                     <label for="author">Tên tác giả</label>
-                    <input type="text" name="author" id="author" value="<?php echo $author; ?>" required>
+                    <input type="text" name="author" id="author"
+                        value="<?php echo htmlspecialchars($post['author']); ?>" required>
                 </div>
                 <div class="form-group">
                     <label for="category_id">Danh mục</label>
                     <select name="category_id" id="category_id">
                         <option value="">-- Chọn danh mục --</option>
                         <?php foreach ($categories as $category): ?>
-                            <option value="<?php echo $category['id']; ?>">
-                                <?php echo htmlspecialchars($category['name']); ?></option>
+                            <option value="<?php echo $category['id']; ?>" <?php if ($post['category_id'] == $category['id'])
+                                   echo 'selected'; ?>>
+                                <?php echo htmlspecialchars($category['name']); ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -141,20 +160,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <path d="M3,4H21V6H3V4M9,9H21V11H9V9M3,14H21V16H3V14M9,19H21V21H9V19Z" />
                             </svg></button>
                     </div>
-                    <div id="content-editor" contenteditable="true" class="wysiwyg-editor"></div>
-                    <textarea name="content" id="content" style="display:none;"></textarea>
+                    <div id="content-editor" contenteditable="true" class="wysiwyg-editor">
+                        <?php echo $post['content']; ?></div>
+                    <textarea name="content" id="content"
+                        style="display:none;"><?php echo htmlspecialchars($post['content']); ?></textarea>
                 </div>
                 <div class="form-group">
-                    <label for="image">Ảnh đại diện (tùy chọn)</label>
+                    <label for="image">Thay ảnh đại diện (để trống nếu không đổi)</label>
                     <div class="file-input-wrapper">
                         <span class="file-input-button">Chọn file...</span>
                         <input type="file" name="image" id="image" accept="image/*"
-                            onchange="document.getElementById('file-name').textContent = this.files[0] ? this.files[0].name : 'Chưa có file nào được chọn.';">
+                            onchange="document.getElementById('file-name').textContent = this.files[0] ? this.files[0].name : '<?php echo $post['image'] ? htmlspecialchars($post['image']) : 'Chưa có file nào được chọn.'; ?>';">
                     </div>
-                    <p id="file-name" class="file-name-display">Chưa có file nào được chọn.</p>
+                    <p id="file-name" class="file-name-display">
+                        <?php echo $post['image'] ? 'Ảnh hiện tại: ' . htmlspecialchars($post['image']) : 'Chưa có file nào được chọn.'; ?>
+                    </p>
                 </div>
                 <div class="form-actions">
-                    <input type="submit" value="Đăng bài">
+                    <input type="submit" value="Cập nhật bài viết">
                 </div>
             </form>
         </div>
